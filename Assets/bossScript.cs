@@ -16,7 +16,7 @@ public class bossScript : MonoBehaviour
     Image image;
     void Start()
     {
-        Invoke("Shoot",1f);
+        Invoke("Shoot",5f);
     }
 
     void Update()
@@ -36,7 +36,7 @@ public class bossScript : MonoBehaviour
      GameObject tempBullet = Instantiate(bullet,transform.position,Quaternion.identity);
      tempBullet.transform.rotation = Quaternion.Euler(0, 0, angle - 90);
      tempBullet.GetComponent<Rigidbody2D>().velocity = (Vector2)mouse_pos.normalized * speed;
-     Invoke("Shoot",1f);
+     Invoke("Shoot",0.5f);
     }
     void OnTriggerEnter2D(Collider2D col){
         if (col.gameObject.tag == "Beam"){
