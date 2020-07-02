@@ -16,14 +16,19 @@ public class damageSystem : MonoBehaviour
     void Update()
     {
         image.fillAmount = health / 100;
+            if (health <= 0){
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+    }
+    void OnTriggerEnter2D(Collider2D col){
+        if (col.gameObject.tag == "Laser"){
+            health = 0;
+        }
     }
     void OnCollisionEnter2D(Collision2D col){
         if (col.gameObject.tag == "Bullet"){
             Destroy(col.gameObject);
-            health -= 15;
-            if (health < 0){
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
+            health -= 5;
         }
     }
 }

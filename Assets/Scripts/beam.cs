@@ -11,6 +11,16 @@ public class beam : MonoBehaviour
     Rigidbody2D rb;
     bool canKnock = true;
     move m;
+    [SerializeField]
+    float screenShake;
+    [SerializeField]
+    float duration;
+    [SerializeField]
+    float returnSpeed;
+    [SerializeField]
+    float reducedTime;
+    public float time;
+    public GameObject particles;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -20,6 +30,15 @@ public class beam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (time < 0){
+            Time.timeScale = 0;
+        }else{
+            Time.timeScale = time;
+        }
+
+     if (Time.timeScale < 1){
+         time += returnSpeed;
+     }
      if (m.fGroundedRemember > 0){
          canKnock = true;
      }
@@ -34,6 +53,9 @@ public class beam : MonoBehaviour
      if (Input.GetMouseButtonDown(0)){
          if (canKnock){
              canKnock = false;
+             shake.e.Shake(screenShake,duration);
+             time = reducedTime;
+             Destroy(Instantiate(particles,transform.position,Quaternion.identity),1f);
              rb.velocity += (Vector2)mouse_pos.normalized * -knockback;
          }
          

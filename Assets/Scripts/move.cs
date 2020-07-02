@@ -74,7 +74,7 @@ public class move : MonoBehaviour
             fGroundedRemember = 0;
             rigid.velocity = new Vector2(rigid.velocity.x, fJumpVelocity);
         }
-
+        if (!Input.GetMouseButton(0)){
         float fHorizontalVelocity = rigid.velocity.x / speed;
         fHorizontalVelocity += Input.GetAxisRaw("Horizontal");
 
@@ -84,7 +84,7 @@ public class move : MonoBehaviour
             fHorizontalVelocity *= Mathf.Pow(1f - fHorizontalDampingWhenTurning, Time.deltaTime * 10f);
         else
             fHorizontalVelocity *= Mathf.Pow(1f - fHorizontalDampingBasic, Time.deltaTime * 10f);
-
         rigid.velocity = new Vector2(fHorizontalVelocity * speed, rigid.velocity.y);
+        }
     }
 }
