@@ -21,14 +21,15 @@ public class damageSystem : MonoBehaviour
             }
     }
     void OnTriggerEnter2D(Collider2D col){
+
+    }
+    void OnCollisionEnter2D(Collision2D col){
         if (col.gameObject.tag == "Laser"){
             health = 0;
         }
-    }
-    void OnCollisionEnter2D(Collision2D col){
         if (col.gameObject.tag == "Bullet"){
             Destroy(col.gameObject);
-            health -= 5;
+            health -= 10;
         }
     }
 }

@@ -36,6 +36,7 @@ public class move : MonoBehaviour
     float fCutJumpHeight = 0.5f;
     [SerializeField]
     float speed;
+    public int dir;
 
     void Start ()
     {
@@ -67,7 +68,14 @@ public class move : MonoBehaviour
                 rigid.velocity = new Vector2(rigid.velocity.x, rigid.velocity.y * fCutJumpHeight);
             }
         }
-
+        if (Input.GetAxisRaw("Horizontal") > 0.3f){
+            dir = 1;
+            transform.rotation = Quaternion.Euler(0,0,0);
+        }
+        if (Input.GetAxisRaw("Horizontal") < -0.3f){
+            dir = -1;
+            transform.rotation = Quaternion.Euler(0,180,0);
+        }
         if ((fJumpPressedRemember > 0) && (fGroundedRemember > 0))
         {
             fJumpPressedRemember = 0;

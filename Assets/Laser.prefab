@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 7341979103999181558}
   m_Layer: 4
   m_Name: Cylinder (1)
-  m_TagString: Bullet
+  m_TagString: Laser
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

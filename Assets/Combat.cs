@@ -1,10 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Combat : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public float parrySpeed;
+    public float parryThreshold;
+    public float meleeRange;
+    public Transform boss;
+    public Animator swordAnim;
+    public float mana;
+    public Image manaCounter;
+    public GameObject trailPrefab;
     void Start()
     {
         
@@ -13,6 +20,48 @@ public class Combat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        GameObject[] bullets = GameObject.FindGameObjectsWithTag("Bullet");
+        foreach (GameObject b in bullets){
+            if ((transform.position - b.transform.position).sqrMagnitude < parryThreshold * parryThreshold && Input.GetMouseButtonDown(1) && !Input.GetMouseButton(0) && (transform.position - boss.position).sqrMagnitude > (parryThreshold * 2) * (parryThreshold * 2)){
+                if (mana > 5){
+                    Vector3 mouse_pos = Input.mousePosition;
+                    mouse_pos.z = 20;
+                    Vector3 object_pos = Camera.main.WorldToScreenPoint(transform.position);
+                    mouse_pos.x = mouse_pos.x - object_pos.x;
+                    mouse_pos.y = mouse_pos.y - object_pos.y;
+                    b.GetComponent<Rigidbody2D>().velocity = (Vector2)mouse_pos.normalized * parrySpeed;
+                    b.layer = 0;
+                    b.tag = "ParriedBullet";
+                    GameObject trail = Instantiate(trailPrefab,new Vector3(100,100,-200),Quaternion.identity);
+                    trail.transform.SetParent(b.transform);
+                    trail.transform.localPosition = Vector3.zero;
+                    mana -= 5;
+                    manaCounter.fillAmount = mana / 100;
+                }
+            }
+        }
+        if (Input.GetMouseButtonDown(1) && swordAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle")){
+            if (CanStrike(transform.position,boss.position,meleeRange)){
+                Debug.Log("Struck");
+                shake.e.Shake(0.6f,0.1f);
+                mana += 10;
+                manaCounter.fillAmount = mana / 100;
+            }
+            swordAnim.SetTrigger("Slash");
+        }
+    }
+    bool CanStrike(Vector3 a, Vector3 b, float d){
+        return (a - b).sqrMagnitude < d * d && Dot2D(a,b) == GetDir();
+    }
+    int Dot2D(Vector3 a, Vector3 b){
+        // Vector3.Dot didn't work. Maybe it's a perspective thing.
+        if (a.x < b.x){
+            return 1;
+        }else{
+            return -1;
+        }
+    }
+    int GetDir(){
+        return GetComponent<move>().dir;
     }
 }

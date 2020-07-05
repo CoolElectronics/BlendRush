@@ -94,7 +94,7 @@ public class bossScript : MonoBehaviour
      tempBullet.transform.rotation = Quaternion.Euler(0, 0, angle - 90);
      tempBullet.GetComponent<Rigidbody2D>().velocity = (Vector2)mouse_pos.normalized * speed;
      if (state == State.shooting){
-        Invoke("Shoot",0.5f);
+        Invoke("Shoot",1.1f);
      }
     }
     void OnTriggerEnter2D(Collider2D col){
@@ -105,6 +105,12 @@ public class bossScript : MonoBehaviour
     void OnTriggerExit2D(Collider2D col){
         if (col.gameObject.tag == "Beam"){
             isBeingHit = false;
+        }
+    }
+     void OnCollisionEnter2D(Collision2D col) {
+        if (col.gameObject.tag == "ParriedBullet"){
+            health -= 20;
+            Destroy(col.gameObject);
         }
     }
 }
