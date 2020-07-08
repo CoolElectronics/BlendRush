@@ -12,6 +12,8 @@ public class Combat : MonoBehaviour
     public float mana;
     public Image manaCounter;
     public GameObject trailPrefab;
+    public Transform beamPivot;
+    public bool isSuperAttacking = false;
     void Start()
     {
         
@@ -22,7 +24,7 @@ public class Combat : MonoBehaviour
     {
         GameObject[] bullets = GameObject.FindGameObjectsWithTag("Bullet");
         foreach (GameObject b in bullets){
-            if ((transform.position - b.transform.position).sqrMagnitude < parryThreshold * parryThreshold && Input.GetMouseButtonDown(1) && !Input.GetMouseButton(0) && (transform.position - boss.position).sqrMagnitude > (parryThreshold * 2) * (parryThreshold * 2)){
+            if ((transform.position - b.transform.position).sqrMagnitude < parryThreshold * parryThreshold && InputManager.e.mouseClicked && !Input.GetMouseButton(0) && (transform.position - boss.position).sqrMagnitude > (parryThreshold * parryThreshold)){
                 if (mana > 5){
                     Vector3 mouse_pos = Input.mousePosition;
                     mouse_pos.z = 20;
@@ -40,14 +42,28 @@ public class Combat : MonoBehaviour
                 }
             }
         }
-        if (Input.GetMouseButtonDown(1) && swordAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle")){
+        if (InputManager.e.mouseHeldDown && mana >= 90){
+            Invoke("StopSuperAttack",1f);
+            SuperAttack();
+        }  
+        if (InputManager.e.mouseClicked && swordAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle")){
             if (CanStrike(transform.position,boss.position,meleeRange)){
                 Debug.Log("Struck");
                 shake.e.Shake(0.6f,0.1f);
                 mana += 10;
                 manaCounter.fillAmount = mana / 100;
+                boss.gameObject.GetComponent<bossScript>().health -= 3;
             }
             swordAnim.SetTrigger("Slash");
+        }
+        if (isSuperAttacking){
+        Vector3 mouse_pos = Input.mousePosition;
+        mouse_pos.z = 20;
+        Vector3 object_pos = Camera.main.WorldToScreenPoint(transform.position);
+        mouse_pos.x = mouse_pos.x - object_pos.x;
+        mouse_pos.y = mouse_pos.y - object_pos.y;
+        float angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
+        beamPivot.rotation = Quaternion.Euler(0, 0, angle - 90);
         }
     }
     bool CanStrike(Vector3 a, Vector3 b, float d){
@@ -63,5 +79,18 @@ public class Combat : MonoBehaviour
     }
     int GetDir(){
         return GetComponent<move>().dir;
+    }
+    void SuperAttack(){
+        mana = 0;
+        shake.e.Shake(1,1);
+        beamPivot.gameObject.SetActive(true);
+        Time.timeScale = 0.2f;
+        isSuperAttacking = true;
+        manaCounter.fillAmount = mana / 100;
+    }
+    void StopSuperAttack(){
+        beamPivot.gameObject.SetActive(false);
+        Time.timeScale = 1f;
+        isSuperAttacking = false;
     }
 }

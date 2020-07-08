@@ -7,6 +7,7 @@ public class damageSystem : MonoBehaviour
 {
     float health = 100;
     public Image image;
+    public GameObject hitParticles;
     void Start()
     {
         
@@ -30,6 +31,8 @@ public class damageSystem : MonoBehaviour
         if (col.gameObject.tag == "Bullet"){
             Destroy(col.gameObject);
             health -= 10;
+            shake.e.Shake(0.1f,0.1f);
+            Instantiate(hitParticles,transform.position,Quaternion.identity);
         }
     }
 }

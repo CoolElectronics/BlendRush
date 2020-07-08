@@ -21,6 +21,7 @@ public class beam : MonoBehaviour
     float reducedTime;
     public float time;
     public GameObject particles;
+    public bool isTimeShifting = false;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -30,13 +31,17 @@ public class beam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    if (isTimeShifting){
         if (time < 0){
             Time.timeScale = 0;
         }else{
             Time.timeScale = time;
         }
-
-     if (Time.timeScale < 1){
+        if (time >= 0.9){
+            isTimeShifting = false;
+        }
+    }
+     if (time < 1){
          time += returnSpeed;
      }
      if (m.fGroundedRemember > 0){
@@ -55,7 +60,8 @@ public class beam : MonoBehaviour
              canKnock = false;
              shake.e.Shake(screenShake,duration);
              time = reducedTime;
-             Destroy(Instantiate(particles,transform.position,Quaternion.identity),1f);
+             isTimeShifting = true;
+             Instantiate(particles,transform.position,Quaternion.identity);
              rb.velocity += (Vector2)mouse_pos.normalized * -knockback;
          }
          

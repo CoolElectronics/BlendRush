@@ -19,7 +19,7 @@ public class beamManager : MonoBehaviour
         if (hit.collider != null)
         {
             float dist = hit.distance;
-            beamObject.localScale = new Vector3(1,dist / 2,1);
+            beamObject.localScale = new Vector3(beamObject.localScale.x,dist / 2,beamObject.localScale.z);
             beamObject.localPosition = new Vector3(0,dist / 2,0);
             Debug.Log("Did Hit");
         }
