@@ -6,14 +6,20 @@ public class particlesFollowTarget : MonoBehaviour
     ParticleSystem m_System;
     ParticleSystem.Particle[] m_Particles;
     public Transform target;
+    public Transform startPoint;
     public float speed;
     public float rate;
     public float deflectSpeed;
     public float effectRange;
     public int numParticles = 0;
+    public string objToFind;
+    public string objToStart;
+    public float innerRad = 2.0f;
+    public float outerRad = 6.0f;
     private void Start() {
         transform.position = Vector3.zero;
-        target = GameObject.Find("Player").transform;
+        target = GameObject.Find(objToFind).transform;
+        startPoint = GameObject.Find(objToStart).transform;
     }
     private void LateUpdate()
     {
@@ -24,7 +30,7 @@ public class particlesFollowTarget : MonoBehaviour
         if (numParticles < numParticlesAlive){
             Debug.Log("NewParticle");
             for (int i = 0; i < numParticlesAlive; i++){
-                m_Particles[i].position = RandomCircle(target.position, Random.Range(2.0f,6.0f), (i * 6) % 360);
+                m_Particles[i].position = RandomCircle(startPoint.position, Random.Range(innerRad,outerRad), (i * 6) % 360);
             }
             numParticles = numParticlesAlive;
         }

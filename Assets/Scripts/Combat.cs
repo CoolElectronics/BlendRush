@@ -14,6 +14,7 @@ public class Combat : MonoBehaviour
     public GameObject trailPrefab;
     public Transform beamPivot;
     public bool isSuperAttacking = false;
+    public GameObject struckParticles;
     void Start()
     {
         
@@ -53,6 +54,7 @@ public class Combat : MonoBehaviour
                 mana += 10;
                 manaCounter.fillAmount = mana / 100;
                 boss.gameObject.GetComponent<bossScript>().health -= 3;
+                Instantiate(struckParticles,Vector3.zero,Quaternion.identity);
             }
             swordAnim.SetTrigger("Slash");
         }

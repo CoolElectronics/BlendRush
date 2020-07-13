@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7800991317034371572}
   - component: {fileID: 7800991317034371563}
   m_Layer: 0
-  m_Name: Particle System 1
+  m_Name: LaserKnock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4826,8 +4826,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  startPoint: {fileID: 0}
   speed: 67.79
   rate: 0
   deflectSpeed: 0.3
   effectRange: 0.37
   numParticles: 0
+  objToFind: Player
+  objToStart: Player
+  innerRad: 2
+  outerRad: 6
