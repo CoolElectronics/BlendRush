@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class damageSystem : MonoBehaviour
 {
-    float health = 100;
+    public float health = 100;
     public Image image;
     public GameObject hitParticles;
     void Start()

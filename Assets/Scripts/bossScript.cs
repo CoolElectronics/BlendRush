@@ -49,7 +49,7 @@ public class bossScript : MonoBehaviour
     void Update()
     {
         if (isBeingHit){
-            health -= 0.2f;
+            health -= 0.2f * Time.deltaTime * 50;
         }
         if (isBeingHyperHit){
             health -= 2f;
@@ -74,6 +74,7 @@ public class bossScript : MonoBehaviour
                     Destroy(laser);
                     state = States.blast;
                     beamPivot.gameObject.SetActive(true);
+                    Invoke("TargetLock",5f);
                     break;
             }
         }
@@ -84,12 +85,7 @@ public class bossScript : MonoBehaviour
                 health -= timeUntilBlast;
                 break;
             case States.blast:
-                Vector3 mouse_pos = player.transform.position;
-                Vector3 object_pos = transform.position;
-                mouse_pos.x = mouse_pos.x - object_pos.x;
-                mouse_pos.y = mouse_pos.y - object_pos.y;
-                float angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
-                beamPivot.rotation = Quaternion.Euler(0, 0, angle - 90);
+
                 break;
             default:
                 break;
@@ -129,6 +125,15 @@ public class bossScript : MonoBehaviour
         GetComponent<Animator>().enabled = true;
         Invoke("Shoot",1.1f);
         Invoke("TeleShoot",0.7f);
+    }
+    void TargetLock(){
+                Vector3 mouse_pos = player.transform.position;
+                Vector3 object_pos = transform.position;
+                mouse_pos.x = mouse_pos.x - object_pos.x;
+                mouse_pos.y = mouse_pos.y - object_pos.y;
+                float angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
+                beamPivot.rotation = Quaternion.Euler(0, 0, angle - 90);
+                Invoke("TargetLock",2f);
     }
     void OnTriggerEnter2D(Collider2D col){
         if (col.gameObject.tag == "Beam"){

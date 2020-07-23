@@ -84,8 +84,7 @@ public class move : MonoBehaviour
         }
         if (!Input.GetMouseButton(0)){
         float fHorizontalVelocity = rigid.velocity.x / speed;
-        fHorizontalVelocity += Input.GetAxisRaw("Horizontal");
-
+        fHorizontalVelocity += Input.GetAxisRaw("Horizontal") * Time.deltaTime * 40;
         if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) < 0.01f)
             fHorizontalVelocity *= Mathf.Pow(1f - fHorizontalDampingWhenStopping, Time.deltaTime * 10f);
         else if (Mathf.Sign(Input.GetAxisRaw("Horizontal")) != Mathf.Sign(fHorizontalVelocity))

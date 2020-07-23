@@ -16,6 +16,7 @@ public class particlesFollowTarget : MonoBehaviour
     public string objToStart;
     public float innerRad = 2.0f;
     public float outerRad = 6.0f;
+    public int timex = 0;
     private void Start() {
         transform.position = Vector3.zero;
         target = GameObject.Find(objToFind).transform;
@@ -23,6 +24,7 @@ public class particlesFollowTarget : MonoBehaviour
     }
     private void LateUpdate()
     {
+        if (timex >= 0){
         InitializeIfNeeded();
 
         // GetParticles is allocation free because we reuse the m_Particles buffer between updates
@@ -40,7 +42,6 @@ public class particlesFollowTarget : MonoBehaviour
         
         for (int i = 0; i < numParticlesAlive; i++)
         {   offset = (target.position - m_Particles[i].position).normalized * speed;
-            Debug.DrawLine(m_Particles[i].position,m_Particles[i].position + offset,Color.green);
            //m_Particles[i].velocity += offset;
             m_Particles[i].velocity = offset;
             for (int x = 0; x < numParticlesAlive; x++){
@@ -56,6 +57,9 @@ public class particlesFollowTarget : MonoBehaviour
         if (numParticlesAlive <= 5){
             Destroy(gameObject);
         }
+        timex = 0;
+        }
+        timex ++;
     }
 
     void InitializeIfNeeded()

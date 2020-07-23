@@ -4836,3 +4836,4 @@ MonoBehaviour:
   objToStart: FirstBoss
   innerRad: 0
   outerRad: 20
+  timex: 0

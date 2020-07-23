@@ -9,6 +9,8 @@ public class shake : MonoBehaviour
     float shakeMag;
     bool isShaking = false;
     public static shake e;
+    public Color col1;
+    public Color col2;
     void Start()
     {
         e = this;
@@ -18,10 +20,12 @@ public class shake : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GetComponent<Camera>().backgroundColor = Color.Lerp(col1,col2,Mathf.Sin(Time.time));
         if (isShaking)
         {
             shakeOffset = new Vector3(Random.Range(-shakeMag,shakeMag),Random.Range(-shakeMag,shakeMag),0);
             transform.position = offset + shakeOffset;
+            transform.rotation = Quaternion.Euler(0,0,Random.Range(-shakeMag * 10,shakeMag * 10));
         }
     }
     public void Shake(float magnitude, float duration){
