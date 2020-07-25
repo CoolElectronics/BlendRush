@@ -25,7 +25,8 @@ public class shake : MonoBehaviour
         {
             shakeOffset = new Vector3(Random.Range(-shakeMag,shakeMag),Random.Range(-shakeMag,shakeMag),0);
             transform.position = offset + shakeOffset;
-            transform.rotation = Quaternion.Euler(0,0,Random.Range(-shakeMag * 10,shakeMag * 10));
+        }else{
+            transform.position = offset;
         }
     }
     public void Shake(float magnitude, float duration){
