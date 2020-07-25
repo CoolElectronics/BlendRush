@@ -5361,12 +5361,12 @@ MonoBehaviour:
   fJumpPressedRememberTime: 0.2
   fGroundedRemember: 0.25
   fGroundedRememberTime: 0.25
-  fHorizontalAcceleration: 9.55
-  fHorizontalDampingBasic: 0.82
-  fHorizontalDampingWhenStopping: 0.793
-  fHorizontalDampingWhenTurning: 0.877
+  fHorizontalAcceleration: 14.79
+  fHorizontalDampingBasic: 0.29
+  fHorizontalDampingWhenStopping: 0.64
+  fHorizontalDampingWhenTurning: 0.66
   fCutJumpHeight: 0.5
-  speed: 8.4
+  speed: 13.4
   dir: 0
 --- !u!4 &184893958
 Transform:
@@ -5399,7 +5399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   beamPivot: {fileID: 1271438896}
-  knockback: 120
+  knockback: 90
   screenShake: 0.54
   duration: 0.1
   returnSpeed: 0.3
@@ -5945,7 +5945,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 893415938}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1368684e-13, y: 10.005672, z: 0}
+  m_LocalPosition: {x: -1.1368684e-13, y: 10.006971, z: 0}
   m_LocalScale: {x: 1, y: 20, z: 1}
   m_Children: []
   m_Father: {fileID: 1271438896}
@@ -12415,8 +12415,8 @@ MonoBehaviour:
   lvl: {fileID: 0}
   timeUntilBlast: 0.09
   beamPivot: {fileID: 169814069}
-  telegraphedColor: {r: 1, g: 0, b: 0, a: 0}
-  brokenColor: {r: 0, g: 0, b: 0, a: 0}
+  telegraphedColor: {r: 0.6199374, g: 0, b: 1, a: 1}
+  brokenColor: {r: 1, g: 0.9345745, b: 0, a: 1}
 --- !u!61 &1935194394
 BoxCollider2D:
   m_ObjectHideFlags: 0

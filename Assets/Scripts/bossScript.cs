@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 public class bossScript : MonoBehaviour
-{   
+{
     [SerializeField]
     GameObject bullet;
     [SerializeField]
@@ -30,11 +30,12 @@ public class bossScript : MonoBehaviour
     public Color telegraphedColor;
     public Color brokenColor;
 
-    Renderer rendererObj;
+    SpriteRenderer rendererObj;
     void Start()
     {
-        rendererObj = transform.GetChild(0).gameObject.GetComponent<Renderer>();
-        defaultC = rendererObj.material.color;
+        rendererObj = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
+        Debug.Log(rendererObj);
+        defaultC = rendererObj.color;
         switch (state){
             case States.shooting:
                 Invoke("Shoot",5f);
@@ -93,7 +94,8 @@ public class bossScript : MonoBehaviour
     }
     void Shoot()
     {
-     rendererObj.material.color = defaultC;
+     if (state == States.shooting){
+     rendererObj.color = defaultC;
      Vector3 mouse_pos = player.transform.position;
      Vector3 object_pos = transform.position;
      mouse_pos.x = mouse_pos.x - object_pos.x;
@@ -102,18 +104,17 @@ public class bossScript : MonoBehaviour
      GameObject tempBullet = Instantiate(bullet,transform.position,Quaternion.identity);
      tempBullet.transform.rotation = Quaternion.Euler(0, 0, angle - 90);
      tempBullet.GetComponent<Rigidbody2D>().velocity = (Vector2)mouse_pos.normalized * speed;
-     if (state == States.shooting){
         Invoke("Shoot",1.1f);
         Invoke("TeleShoot",0.7f);
      }
     }
     void TeleShoot(){
-        rendererObj.material.color = telegraphedColor;
+        rendererObj.color = telegraphedColor;
     }
     void BreakDown(){
         if (state == States.shooting){
         state = States.broken;
-        rendererObj.material.color = brokenColor;
+        rendererObj.color = brokenColor;
         GetComponent<Animator>().enabled = false;
         Invoke("FixUp",8f);
         Invoke("BreakDown",Random.Range(15.0f,60.0f));
@@ -121,7 +122,7 @@ public class bossScript : MonoBehaviour
     }
     void FixUp(){
         state = States.shooting;
-        rendererObj.material.color = defaultC;
+        rendererObj.color = defaultC;
         GetComponent<Animator>().enabled = true;
         Invoke("Shoot",1.1f);
         Invoke("TeleShoot",0.7f);
