@@ -32,19 +32,15 @@ public class beam : MonoBehaviour
     void Update()
     {
     if (isTimeShifting){
-        if (time < 0){
-            Time.timeScale = 0;
-        }else{
-            Time.timeScale = time;
-        }
         if (time >= 0.9){
             isTimeShifting = false;
+            Time.timeScale = 1;
         }
     }
      if (time < 1){
          time += returnSpeed;
      }
-     if (m.fGroundedRemember > 0){
+     if (m.timeSinceGrounded > 0){
          canKnock = true;
      }
      Vector3 mouse_pos = Input.mousePosition;
@@ -60,9 +56,10 @@ public class beam : MonoBehaviour
              canKnock = false;
              shake.e.Shake(screenShake,duration);
              time = reducedTime;
+             Time.timeScale = 0;
              isTimeShifting = true;
              Instantiate(particles,transform.position,Quaternion.identity);
-             rb.velocity += (Vector2)mouse_pos.normalized * -knockback;
+             rb.velocity = (Vector2)mouse_pos.normalized * -knockback;
          }
          
      }

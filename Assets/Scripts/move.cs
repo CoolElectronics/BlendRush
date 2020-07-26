@@ -11,11 +11,11 @@ public class move : MonoBehaviour
 
     Rigidbody2D rigid;
 
-    float fJumpPressedRemember = 0;
+    float timeSinceJumpPress = 0;
     [SerializeField]
     float fJumpPressedRememberTime = 0.2f;
 
-    public float fGroundedRemember = 0;
+    public float timeSinceGrounded = 0;
     [SerializeField]
     float fGroundedRememberTime = 0.25f;
 
@@ -23,7 +23,7 @@ public class move : MonoBehaviour
     float fHorizontalAcceleration = 1;
     [SerializeField]
     [Range(0, 1)]
-    float fHorizontalDampingBasic = 0.5f;
+    float damping = 0.5f;
     [SerializeField]
     [Range(0, 1)]
     float fHorizontalDampingWhenStopping = 0.5f;
@@ -49,16 +49,16 @@ public class move : MonoBehaviour
         Vector2 v2GroundedBoxCheckScale = (Vector2)transform.localScale + new Vector2(-0.02f, 0);
         bool bGrounded = Physics2D.OverlapBox(v2GroundedBoxCheckPosition, v2GroundedBoxCheckScale, 0, lmWalls);
 
-        fGroundedRemember -= Time.deltaTime;
+        timeSinceGrounded -= Time.deltaTime;
         if (bGrounded)
         {
-            fGroundedRemember = fGroundedRememberTime;
+            timeSinceGrounded = fGroundedRememberTime;
         }
 
-        fJumpPressedRemember -= Time.deltaTime;
+        timeSinceJumpPress -= Time.deltaTime;
         if (Input.GetButtonDown("Jump"))
         {
-            fJumpPressedRemember = fJumpPressedRememberTime;
+            timeSinceJumpPress = fJumpPressedRememberTime;
         }
 
         if (Input.GetButtonUp("Jump"))
@@ -76,13 +76,13 @@ public class move : MonoBehaviour
             dir = -1;
             transform.rotation = Quaternion.Euler(0,180,0);
         }
-        if ((fJumpPressedRemember > 0) && (fGroundedRemember > 0))
+        if ((timeSinceJumpPress > 0) && (timeSinceGrounded > 0))
         {
-            fJumpPressedRemember = 0;
-            fGroundedRemember = 0;
+            timeSinceJumpPress = 0;
+            timeSinceGrounded = 0;
             rigid.velocity = new Vector2(rigid.velocity.x, fJumpVelocity);
         }
-        if (!Input.GetMouseButton(0)){
+        if (!Input.GetMouseButton(0) || bGrounded){
         float fHorizontalVelocity = rigid.velocity.x / speed;
         fHorizontalVelocity += Input.GetAxisRaw("Horizontal") * Time.deltaTime * 40;
         if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) < 0.01f)
@@ -90,7 +90,7 @@ public class move : MonoBehaviour
         else if (Mathf.Sign(Input.GetAxisRaw("Horizontal")) != Mathf.Sign(fHorizontalVelocity))
             fHorizontalVelocity *= Mathf.Pow(1f - fHorizontalDampingWhenTurning, Time.deltaTime * 10f);
         else
-            fHorizontalVelocity *= Mathf.Pow(1f - fHorizontalDampingBasic, Time.deltaTime * 10f);
+            fHorizontalVelocity *= Mathf.Pow(1f - damping, Time.deltaTime * 10f);
         rigid.velocity = new Vector2(fHorizontalVelocity * speed, rigid.velocity.y);
         }
     }

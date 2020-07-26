@@ -32,6 +32,7 @@ public class Combat : MonoBehaviour
                     Vector3 object_pos = Camera.main.WorldToScreenPoint(transform.position);
                     mouse_pos.x = mouse_pos.x - object_pos.x;
                     mouse_pos.y = mouse_pos.y - object_pos.y;
+                    b.transform.rotation = Quaternion.Euler(0,0,Mathf.Atan2(mouse_pos.x,mouse_pos.y) + 90);
                     b.GetComponent<Rigidbody2D>().velocity = (Vector2)mouse_pos.normalized * parrySpeed;
                     b.layer = 0;
                     b.tag = "ParriedBullet";
