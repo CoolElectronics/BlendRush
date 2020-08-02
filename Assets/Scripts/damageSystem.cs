@@ -22,7 +22,12 @@ public class damageSystem : MonoBehaviour
             }
     }
     void OnTriggerEnter2D(Collider2D col){
-
+        if (col.gameObject.tag == "Explosion"){
+            Destroy(col.gameObject);
+            health -= 10;
+            shake.e.Shake(0.1f,0.1f);
+            Instantiate(hitParticles,transform.position,Quaternion.identity);
+        }
     }
     void OnCollisionEnter2D(Collision2D col){
         if (col.gameObject.tag == "Laser"){

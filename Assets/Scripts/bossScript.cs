@@ -9,7 +9,7 @@ public class bossScript : MonoBehaviour
     [SerializeField]
     GameObject player;
     [SerializeField]
-    
+
     float speed;
     [SerializeField]
     GameObject missileObject;
@@ -37,14 +37,13 @@ public class bossScript : MonoBehaviour
     void Start()
     {
         rendererObj = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
-        Debug.Log(rendererObj);
         defaultC = rendererObj.color;
         switch (state)
         {
             case States.shooting:
                 Invoke("Shoot", 5f);
                 Invoke("TeleShoot", 4.6f);
-                Invoke("ShootMissile",10f);
+                Invoke("ShootMissile", 10f);
                 Invoke("BreakDown", Random.Range(15.0f, 60.0f));
                 break;
             case States.laser:
@@ -90,6 +89,11 @@ public class bossScript : MonoBehaviour
         image.fillAmount = health / 100;
         switch (state)
         {
+            case States.shooting:
+                Vector2 topRightCorner = new Vector2(1, 1);
+                Vector2 edgeVector = Camera.main.ViewportToWorldPoint(topRightCorner);
+                //transform.position = new Vector3(Mathf.Abs((player.transform.position.x + edgeVector.x) - edgeVector.x * 2) - edgeVector.x,Mathf.Abs((player.transform.position.y + edgeVector.y) - edgeVector.y * 2) - edgeVector.y,0);
+                break;
             case States.laser:
                 health -= timeUntilBlast;
                 break;
@@ -100,12 +104,13 @@ public class bossScript : MonoBehaviour
                 break;
         }
     }
-    void ShootMissile(){
+    void ShootMissile()
+    {
         if (state == States.shooting)
         {
-            GameObject tempMissile = Instantiate(missileObject,transform.position,Quaternion.identity);
+            GameObject tempMissile = Instantiate(missileObject, transform.position, Quaternion.identity);
             tempMissile.GetComponent<MoveTowards>().target = player.transform;
-            Invoke("ShootMissile",7f);
+            Invoke("ShootMissile", 7f);
         }
     }
     void Shoot()

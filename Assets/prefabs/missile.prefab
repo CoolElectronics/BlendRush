@@ -256,6 +256,7 @@ GameObject:
   - component: {fileID: 5937958202549653750}
   - component: {fileID: 5937958202549653749}
   - component: {fileID: 821687790425232039}
+  - component: {fileID: 142505807090854395}
   m_Layer: 5
   m_Name: missile
   m_TagString: Untagged
@@ -348,6 +349,23 @@ MonoBehaviour:
   rspeed: 2
   isVelocity: 1
   rotate: 1
+  min: {fileID: 2745349472681453443}
+  second: {fileID: 2745349472681453443}
+  second2: {fileID: 6114466315978914689}
+  numbers:
+  - {fileID: 21300000, guid: cd2159d14141141c19db601a288fe766, type: 3}
+  - {fileID: 21300000, guid: 9a2ef1f3103c64e69af8855d1346de4e, type: 3}
+  - {fileID: 21300000, guid: a03d11b1207284e68a5e2f3ecd63607f, type: 3}
+  - {fileID: 21300000, guid: 9549d13b7255340b3b9d56e63f83fba0, type: 3}
+  - {fileID: 21300000, guid: 2c2ccc1cab4d14f39b14d7720fed928c, type: 3}
+  - {fileID: 21300000, guid: 59806d7e03c7c4c9e8d2c9db11951947, type: 3}
+  - {fileID: 21300000, guid: c3fe96ec7d1c446de85d1872cac8bd03, type: 3}
+  - {fileID: 21300000, guid: 7c7c984bbd01a4f7881153c486f38729, type: 3}
+  - {fileID: 21300000, guid: ac922f9c07016413fa2ff5a2cccb6013, type: 3}
+  - {fileID: 21300000, guid: 61f45191598344100ba35968145253e2, type: 3}
+  explosion: {fileID: 5271260096397510174, guid: b65de573fffd74be3b703c80c53fdd68,
+    type: 3}
+  boomspeed: 30
 --- !u!50 &5937958202549653749
 Rigidbody2D:
   serializedVersion: 4
@@ -379,7 +397,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -395,6 +413,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 10, y: 36}
   m_EdgeRadius: 0
+--- !u!114 &142505807090854395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5937958202549653753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72da2fa9762094c80adf6f60eeaeea68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7580883460152352780
 GameObject:
   m_ObjectHideFlags: 0

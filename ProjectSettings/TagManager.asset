@@ -10,6 +10,7 @@ TagManager:
   - ParriedBullet
   - HyperBeam
   - breakable
+  - Explosion
   layers:
   - Default
   - TransparentFX

@@ -50,7 +50,6 @@ public class Combat : MonoBehaviour
         }  
         if (InputManager.e.mouseClicked && swordAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle")){
             if (CanStrike(transform.position,boss.position,meleeRange)){
-                Debug.Log("Struck");
                 shake.e.Shake(0.6f,0.1f);
                 mana += 10;
                 manaCounter.fillAmount = mana / 100;

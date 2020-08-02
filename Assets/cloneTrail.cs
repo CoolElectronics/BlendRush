@@ -12,7 +12,7 @@ public class cloneTrail : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         x++;
         if (x > 1)

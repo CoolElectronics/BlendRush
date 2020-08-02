@@ -30,7 +30,6 @@ public class particlesFollowTarget : MonoBehaviour
         // GetParticles is allocation free because we reuse the m_Particles buffer between updates
         int numParticlesAlive = m_System.GetParticles(m_Particles);
         if (numParticles < numParticlesAlive){
-            Debug.Log("NewParticle");
             for (int i = 0; i < numParticlesAlive; i++){
                 m_Particles[i].position = RandomCircle(startPoint.position, Random.Range(innerRad,outerRad), (i * 6) % 360);
             }
@@ -72,7 +71,6 @@ public class particlesFollowTarget : MonoBehaviour
     }
      Vector3 RandomCircle(Vector3 center, float radius,int a)
  {
-     Debug.Log(a);
      float ang = a;
      Vector3 pos;
      pos.x = center.x + radius * Mathf.Sin(ang * Mathf.Deg2Rad);

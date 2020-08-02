@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class MoveTowards : MonoBehaviour
 {
     public Transform target;
@@ -14,23 +14,66 @@ public class MoveTowards : MonoBehaviour
     [SerializeField]
     bool rotate;
     Rigidbody2D rb;
-    void Start(){
-       rb = GetComponent<Rigidbody2D>();
+    [SerializeField]
+    SpriteRenderer min;
+    [SerializeField]
+    SpriteRenderer second;
+    [SerializeField]
+    SpriteRenderer second2;
+    public Sprite[] numbers;
+    int timer = 120;
+    public GameObject explosion;
+    public float boomspeed;
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
     }
     void Update()
     {
+        timer--;
+        if (timer == 0){
+            boom();
+            return;
+        }
+        string time = toTime(timer);
+        if (time.Length >= 8){
+            string num1 = time[4].ToString();
+            string num2 = time[6].ToString();
+            string num3 = time[7].ToString();
+            min.sprite = numbers[Convert.ToInt32(num1)];
+            second.sprite = numbers[Convert.ToInt32(num2)];
+            second2.sprite = numbers[Convert.ToInt32(num3)];
+        }
         Vector3 dir = (target.position - transform.position).normalized;
-        if (isVelocity){
+        if (isVelocity)
+        {
             rb.velocity = dir * force;
-        }else{
+        }
+        else
+        {
             rb.AddForce(dir * force);
         }
-        if (rotate){
+        if (rotate)
+        {
             Vector2 v = (target.position - transform.position).normalized;
-            transform.rotation = Quaternion.Euler(0,0,Mathf.Atan2(v.x,v.y) * -Mathf.Rad2Deg);
+            transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(v.x, v.y) * -Mathf.Rad2Deg);
         }
     }
-    private void OnCollisionEnter2D(Collision2D col) {
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        boom();
+    }
+    string toTime(int time)
+    {
+        return TimeSpan.FromSeconds(time).ToString();
+    }
+    void boom(){
         Destroy(gameObject);
+        for (int r = 0; r < 360; r+= 3)
+        {
+            GameObject tempBullet = Instantiate(explosion, transform.position, Quaternion.identity);
+            tempBullet.transform.rotation = Quaternion.Euler(0, 0, r - 90);
+            tempBullet.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Cos(r * Mathf.Deg2Rad), Mathf.Sin(r * Mathf.Deg2Rad)) * boomspeed;
+        }
     }
 }

@@ -9,11 +9,6 @@ public class pix : MonoBehaviour
     int w;
     protected void Start()
     {
-        if (!SystemInfo.supportsImageEffects)
-        {
-            enabled = false;
-            return;
-        }
     }
     void Update()
     {

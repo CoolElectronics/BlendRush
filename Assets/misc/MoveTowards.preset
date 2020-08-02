@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MoveTowards
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: 44fa4f138dfe24fc7852ca89bd2eebec,
+      type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: target
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: force
+    value: 20
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: rspeed
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: isVelocity
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: rotate
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: min
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: second
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: second2
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: numbers.Array.size
+    value: 10
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: numbers.Array.data[0]
+    value: 
+    objectReference: {fileID: 21300000, guid: cd2159d14141141c19db601a288fe766, type: 3}
+  - target: {fileID: 0}
+    propertyPath: numbers.Array.data[1]
+    value: 
+    objectReference: {fileID: 21300000, guid: 9a2ef1f3103c64e69af8855d1346de4e, type: 3}
+  - target: {fileID: 0}
+    propertyPath: numbers.Array.data[2]
+    value: 
+    objectReference: {fileID: 21300000, guid: a03d11b1207284e68a5e2f3ecd63607f, type: 3}
+  - target: {fileID: 0}
+    propertyPath: numbers.Array.data[3]
+    value: 
+    objectReference: {fileID: 21300000, guid: 9549d13b7255340b3b9d56e63f83fba0, type: 3}
+  - target: {fileID: 0}
+    propertyPath: numbers.Array.data[4]
+    value: 
+    objectReference: {fileID: 21300000, guid: 2c2ccc1cab4d14f39b14d7720fed928c, type: 3}
+  - target: {fileID: 0}
+    propertyPath: numbers.Array.data[5]
+    value: 
+    objectReference: {fileID: 21300000, guid: 59806d7e03c7c4c9e8d2c9db11951947, type: 3}
+  - target: {fileID: 0}
+    propertyPath: numbers.Array.data[6]
+    value: 
+    objectReference: {fileID: 21300000, guid: c3fe96ec7d1c446de85d1872cac8bd03, type: 3}
+  - target: {fileID: 0}
+    propertyPath: numbers.Array.data[7]
+    value: 
+    objectReference: {fileID: 21300000, guid: 7c7c984bbd01a4f7881153c486f38729, type: 3}
+  - target: {fileID: 0}
+    propertyPath: numbers.Array.data[8]
+    value: 
+    objectReference: {fileID: 21300000, guid: ac922f9c07016413fa2ff5a2cccb6013, type: 3}
+  - target: {fileID: 0}
+    propertyPath: numbers.Array.data[9]
+    value: 
+    objectReference: {fileID: 21300000, guid: 61f45191598344100ba35968145253e2, type: 3}
