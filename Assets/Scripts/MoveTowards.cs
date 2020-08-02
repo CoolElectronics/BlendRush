@@ -24,6 +24,7 @@ public class MoveTowards : MonoBehaviour
     int timer = 120;
     public GameObject explosion;
     public float boomspeed;
+    public int explosiongap;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -69,7 +70,8 @@ public class MoveTowards : MonoBehaviour
     }
     void boom(){
         Destroy(gameObject);
-        for (int r = 0; r < 360; r+= 3)
+        int offset = (int)Mathf.Round(UnityEngine.Random.Range(0,360));
+        for (int r = offset; r < 360 + offset - explosiongap; r+= 3)
         {
             GameObject tempBullet = Instantiate(explosion, transform.position, Quaternion.identity);
             tempBullet.transform.rotation = Quaternion.Euler(0, 0, r - 90);
