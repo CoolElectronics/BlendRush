@@ -365,7 +365,7 @@ MonoBehaviour:
   explosion: {fileID: 5271260096397510174, guid: b65de573fffd74be3b703c80c53fdd68,
     type: 3}
   boomspeed: 30
-  explosiongap: 15
+  explosiongap: 25
 --- !u!50 &5937958202549653749
 Rigidbody2D:
   serializedVersion: 4

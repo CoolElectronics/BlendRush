@@ -70,8 +70,10 @@ public class MoveTowards : MonoBehaviour
     }
     void boom(){
         Destroy(gameObject);
-        int offset = (int)Mathf.Round(UnityEngine.Random.Range(0,360));
-        for (int r = offset; r < 360 + offset - explosiongap; r+= 3)
+        Vector2 normalVec = (transform.position - target.position).normalized;
+        float angleBetweenPlayer = -Mathf.Atan2(normalVec.x,normalVec.y) * Mathf.Rad2Deg - 90 + explosiongap / 2;
+        int offset = (int)Mathf.Round(angleBetweenPlayer);
+        for (int r = offset; r < 360 + offset - explosiongap; r+= 5)
         {
             GameObject tempBullet = Instantiate(explosion, transform.position, Quaternion.identity);
             tempBullet.transform.rotation = Quaternion.Euler(0, 0, r - 90);

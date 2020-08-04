@@ -22,10 +22,19 @@ public class beam : MonoBehaviour
     public float time;
     public GameObject particles;
     public bool isTimeShifting = false;
+    public GameObject beamObject;
+    public GameObject gunObject;
+    float timeSincePress;
+    public float pulseDuration;
+    bool laserOn = false;
+    public int ammo;
+    public int maxAmmo = 5;
+    public GameObject ammoCrate;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         m = GetComponent<move>();
+        ammo = maxAmmo;
     }
 
     // Update is called once per frame
@@ -54,20 +63,56 @@ public class beam : MonoBehaviour
         mouse_pos.y = mouse_pos.y - object_pos.y;
         float angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
         beamPivot.rotation = Quaternion.Euler(0, 0, angle - 90);
-        beamPivot.gameObject.SetActive(Input.GetMouseButton(0));
+        gunObject.GetComponent<SpriteRenderer>().flipY = angle - 90 < 0;
+        if (angle - 90 < 0)
+        {
+            gunObject.transform.localPosition = new Vector3(0.28f, 2.5f, 0);
+        }
+        else
+        {
+            gunObject.transform.localPosition = new Vector3(-0.28f, 2.5f, 0);
+        }
         if (Input.GetMouseButtonDown(0))
         {
-            if (canKnock)
+            if (ammo > 0)
             {
-                canKnock = false;
-                shake.e.Shake(screenShake, duration);
-                time = reducedTime;
-                Time.timeScale = 0;
-                isTimeShifting = true;
-                Instantiate(particles, transform.position, Quaternion.identity);
-                rb.velocity = (Vector2)mouse_pos.normalized * -knockback;
+                laserOn = true;
+                timeSincePress = pulseDuration;
+                if (canKnock)
+                {
+                    canKnock = false;
+                    shake.e.Shake(screenShake, duration);
+                    time = reducedTime;
+                    Time.timeScale = 0;
+                    isTimeShifting = true;
+                    Instantiate(particles, transform.position, Quaternion.identity);
+                    rb.velocity = (Vector2)mouse_pos.normalized * -knockback;
+                }
+                ammo--;
+                if (ammo == 1)
+                {
+                    spawnAmmoCrate();
+                }
             }
-
+        }
+        beamObject.SetActive(laserOn);
+        timeSincePress -= 60f * Time.deltaTime;
+        if (timeSincePress <= 0)
+        {
+            laserOn = false;
+        }
+    }
+    void spawnAmmoCrate()
+    {
+        Vector2 topRightCorner = new Vector2(1, 1);
+        Vector2 edgeVector = Camera.main.ViewportToWorldPoint(topRightCorner);
+        Vector2 RandomPos = new Vector2(Random.Range(-edgeVector.x, edgeVector.x), Random.Range(-edgeVector.y, edgeVector.y));
+        Instantiate(ammoCrate,RandomPos,Quaternion.identity);
+    }
+    private void OnTriggerEnter2D(Collider2D col) {
+        if (col.gameObject.tag == "ammoCrate"){
+            Destroy(col.gameObject);
+            ammo = maxAmmo;
         }
     }
 }

@@ -53,10 +53,6 @@ public class bossScript : MonoBehaviour
 
     void Update()
     {
-        if (isBeingHit)
-        {
-            health -= 0.2f * Time.deltaTime * 50;
-        }
         if (isBeingHyperHit)
         {
             health -= 2f;
@@ -173,7 +169,7 @@ public class bossScript : MonoBehaviour
     {
         if (col.gameObject.tag == "Beam")
         {
-            isBeingHit = true;
+            health -= 2.5f;
         }
         if (col.gameObject.tag == "HyperBeam")
         {
