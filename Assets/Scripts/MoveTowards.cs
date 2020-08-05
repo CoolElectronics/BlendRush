@@ -72,7 +72,7 @@ public class MoveTowards : MonoBehaviour
         Destroy(gameObject);
         Vector2 normalVec = (transform.position - target.position).normalized;
         float angleBetweenPlayer = -Mathf.Atan2(normalVec.x,normalVec.y) * Mathf.Rad2Deg - 90 + explosiongap / 2;
-        int offset = (int)Mathf.Round(angleBetweenPlayer);
+        int offset = (int)Mathf.Round(angleBetweenPlayer) + UnityEngine.Random.Range(-30,30);
         for (int r = offset; r < 360 + offset - explosiongap; r+= 5)
         {
             GameObject tempBullet = Instantiate(explosion, transform.position, Quaternion.identity);

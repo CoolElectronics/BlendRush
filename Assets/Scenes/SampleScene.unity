@@ -6124,7 +6124,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 891470193}
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.28, y: 2.2559133, z: 0}
+  m_LocalPosition: {x: -0.28, y: 2.2561717, z: 0}
   m_LocalScale: {x: 0.24999994, y: 0.24999994, z: 1}
   m_Children: []
   m_Father: {fileID: 1271438896}
@@ -6206,7 +6206,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 893415938}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1368684e-13, y: 10.003077, z: 0}
+  m_LocalPosition: {x: -1.1368684e-13, y: 10.00411, z: 0}
   m_LocalScale: {x: 0.87, y: 20, z: 1}
   m_Children: []
   m_Father: {fileID: 1271438896}
@@ -12531,7 +12531,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1935194391}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: f6fe7084ac8034a6188fece234740c69, type: 2}
   m_CullingMode: 0
@@ -12570,6 +12570,12 @@ MonoBehaviour:
   beamPivot: {fileID: 169814069}
   telegraphedColor: {r: 0.6199374, g: 0, b: 1, a: 1}
   brokenColor: {r: 1, g: 0.9345745, b: 0, a: 1}
+  lm:
+    serializedVersion: 2
+    m_Bits: 791
+  ExcludePlayerlm:
+    serializedVersion: 2
+    m_Bits: 807
 --- !u!61 &1935194394
 BoxCollider2D:
   m_ObjectHideFlags: 0

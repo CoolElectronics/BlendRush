@@ -34,6 +34,11 @@ public class bossScript : MonoBehaviour
     public Color brokenColor;
 
     SpriteRenderer rendererObj;
+    [SerializeField]
+    LayerMask lm;
+    [SerializeField]
+    LayerMask ExcludePlayerlm;
+    Vector2 targetPosition;
     void Start()
     {
         rendererObj = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
@@ -64,16 +69,10 @@ public class bossScript : MonoBehaviour
             {
                 case States.shooting:
                     state = States.laser;
-                    GetComponent<BoxCollider2D>().enabled = false;
-                    transform.GetChild(0).GetComponent<Renderer>().enabled = false;
-                    laser = Instantiate(laser, Vector3.zero, Quaternion.identity);
-                    GetComponent<Animator>().enabled = false;
-                    lvl.GetComponent<Animator>().SetBool("StartLasers", true);
                     break;
                 case States.laser:
                     GetComponent<BoxCollider2D>().enabled = true;
                     transform.GetChild(0).GetComponent<Renderer>().enabled = true;
-                    GetComponent<Animator>().enabled = false;
                     transform.position = new Vector3(0, 20, 0);
                     Destroy(laser);
                     state = States.blast;
@@ -86,8 +85,18 @@ public class bossScript : MonoBehaviour
         switch (state)
         {
             case States.shooting:
+
                 Vector2 topRightCorner = new Vector2(1, 1);
                 Vector2 edgeVector = Camera.main.ViewportToWorldPoint(topRightCorner);
+                if (!CanSeePlayer())
+                {
+                    List<Vector2> possibleLocations = CalculateLOSPosition();
+                    if (possibleLocations.Count > 0)
+                    {
+                        transform.position = possibleLocations[(int)Mathf.Round(Random.Range(0, possibleLocations.Count - 1))];
+                    }
+                }
+                //code for making the object take the inverse position of the player 
                 //transform.position = new Vector3(Mathf.Abs((player.transform.position.x + edgeVector.x) - edgeVector.x * 2) - edgeVector.x,Mathf.Abs((player.transform.position.y + edgeVector.y) - edgeVector.y * 2) - edgeVector.y,0);
                 break;
             case States.laser:
@@ -142,7 +151,6 @@ public class bossScript : MonoBehaviour
         {
             state = States.broken;
             rendererObj.color = brokenColor;
-            GetComponent<Animator>().enabled = false;
             Invoke("FixUp", 8f);
             Invoke("BreakDown", Random.Range(15.0f, 60.0f));
         }
@@ -151,9 +159,9 @@ public class bossScript : MonoBehaviour
     {
         state = States.shooting;
         rendererObj.color = defaultC;
-        GetComponent<Animator>().enabled = true;
         Invoke("Shoot", 1.1f);
         Invoke("TeleShoot", 0.7f);
+        Invoke("ShootMissile", 7f);
     }
     void TargetLock()
     {
@@ -195,5 +203,55 @@ public class bossScript : MonoBehaviour
             health -= 14;
             Destroy(col.gameObject);
         }
+    }
+    bool CanSeePlayer()
+    {
+        Vector3 mouse_pos = player.transform.position;
+        Vector3 object_pos = transform.position;
+        mouse_pos.x = mouse_pos.x - object_pos.x;
+        mouse_pos.y = mouse_pos.y - object_pos.y;
+        float angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, reverseAtan(angle), Mathf.Infinity, lm);
+        Debug.DrawRay(transform.position, reverseAtan(angle) * hit.distance, Color.yellow);
+        if (hit.collider != null)
+        {
+            GameObject go = hit.collider.gameObject;
+            if (go.CompareTag("Player"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    List<Vector2> CalculateLOSPosition()
+    {
+        Vector3 mouse_pos = transform.position;
+        Vector3 object_pos = player.transform.position;
+        mouse_pos.x = mouse_pos.x - object_pos.x;
+        mouse_pos.y = mouse_pos.y - object_pos.y;
+        float angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
+        RaycastHit2D hit;
+        List<Vector2> possibleLocations = new List<Vector2>(0);
+        for (int a = 0; a < 360; a += 2)
+        {
+            hit = Physics2D.Raycast(player.transform.position, reverseAtan(angle + a), mouse_pos.magnitude, ExcludePlayerlm);
+            if (hit.collider == null)
+            {
+                Debug.DrawRay(player.transform.position, reverseAtan(angle + a) * mouse_pos.magnitude, Color.yellow);
+                possibleLocations.Add((Vector2)player.transform.position + reverseAtan(angle + a) * mouse_pos.magnitude);
+            }
+        }
+        return possibleLocations;
+    }
+    Vector2 reverseAtan(float angle)
+    {
+        return new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
     }
 }
