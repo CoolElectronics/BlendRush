@@ -106,7 +106,7 @@ public class beam : MonoBehaviour
     {
         Vector2 topRightCorner = new Vector2(1, 1);
         Vector2 edgeVector = Camera.main.ViewportToWorldPoint(topRightCorner);
-        Vector2 RandomPos = new Vector2(Random.Range(-edgeVector.x, edgeVector.x), Random.Range(-edgeVector.y, edgeVector.y));
+        Vector2 RandomPos = new Vector2(Random.Range(-edgeVector.x, edgeVector.x), Random.Range(-edgeVector.y, (edgeVector.y / 5) * 2));
         Instantiate(ammoCrate,RandomPos,Quaternion.identity);
     }
     private void OnTriggerEnter2D(Collider2D col) {

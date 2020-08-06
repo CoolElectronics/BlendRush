@@ -5524,7 +5524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   beamPivot: {fileID: 1271438896}
-  knockback: 120
+  knockback: 140
   screenShake: 0.54
   duration: 0.1
   returnSpeed: 0.3
@@ -5535,9 +5535,9 @@ MonoBehaviour:
   isTimeShifting: 0
   beamObject: {fileID: 893415938}
   gunObject: {fileID: 891470193}
-  pulseDuration: 2
+  pulseDuration: 4
   ammo: 0
-  maxAmmo: 5
+  maxAmmo: 6
   ammoCrate: {fileID: 3246676672333092650, guid: f1986eea39c09468a97d9c37a50f3bc4,
     type: 3}
 --- !u!114 &184893960
@@ -5552,7 +5552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dba49ce762c8948c2b0ac9ec90d17ed1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 1
   image: {fileID: 1865754145}
   hitParticles: {fileID: 4366828931370628074, guid: b9b038fe6d2664ca48341bb57fb867fc,
     type: 3}
@@ -6124,7 +6124,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 891470193}
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.28, y: 2.2561717, z: 0}
+  m_LocalPosition: {x: -0.28, y: 2.2563214, z: 0}
   m_LocalScale: {x: 0.24999994, y: 0.24999994, z: 1}
   m_Children: []
   m_Father: {fileID: 1271438896}
@@ -6206,7 +6206,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 893415938}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1368684e-13, y: 10.00411, z: 0}
+  m_LocalPosition: {x: -1.1368684e-13, y: 10.004709, z: 0}
   m_LocalScale: {x: 0.87, y: 20, z: 1}
   m_Children: []
   m_Father: {fileID: 1271438896}
@@ -12576,6 +12576,7 @@ MonoBehaviour:
   ExcludePlayerlm:
     serializedVersion: 2
     m_Bits: 807
+  PathSpeed: 0
 --- !u!61 &1935194394
 BoxCollider2D:
   m_ObjectHideFlags: 0

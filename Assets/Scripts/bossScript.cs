@@ -39,6 +39,14 @@ public class bossScript : MonoBehaviour
     [SerializeField]
     LayerMask ExcludePlayerlm;
     Vector2 targetPosition;
+    [SerializeField]
+    float PathSpeed;
+    public LayerMask PathMask;
+    public float sight;
+    bool rayset = false;
+    float angleToTarget = 0;
+    bool canStillCheckPlayerVis = true;
+    public float amplitude;
     void Start()
     {
         rendererObj = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
@@ -85,16 +93,24 @@ public class bossScript : MonoBehaviour
         switch (state)
         {
             case States.shooting:
-
+                if (targetPosition != Vector2.zero){
+                    Pathfind(targetPosition);
+                }else{
+                    transform.position = Hover(transform.position, amplitude);
+                }
+                Debug.DrawRay(targetPosition, new Vector3(0, 1, 0), Color.red, 0.1f);
                 Vector2 topRightCorner = new Vector2(1, 1);
                 Vector2 edgeVector = Camera.main.ViewportToWorldPoint(topRightCorner);
                 if (!CanSeePlayer())
                 {
-                    List<Vector2> possibleLocations = CalculateLOSPosition();
-                    if (possibleLocations.Count > 0)
-                    {
-                        transform.position = possibleLocations[(int)Mathf.Round(Random.Range(0, possibleLocations.Count - 1))];
+                    if (canStillCheckPlayerVis){
+                        canStillCheckPlayerVis = false;
+                        Invoke("CheckVisibilityAfter", 1.5f);
                     }
+                }
+                else
+                {
+                    // targetPosition = Vector2.zero;
                 }
                 //code for making the object take the inverse position of the player 
                 //transform.position = new Vector3(Mathf.Abs((player.transform.position.x + edgeVector.x) - edgeVector.x * 2) - edgeVector.x,Mathf.Abs((player.transform.position.y + edgeVector.y) - edgeVector.y * 2) - edgeVector.y,0);
@@ -245,7 +261,7 @@ public class bossScript : MonoBehaviour
             if (hit.collider == null)
             {
                 Debug.DrawRay(player.transform.position, reverseAtan(angle + a) * mouse_pos.magnitude, Color.yellow);
-                possibleLocations.Add((Vector2)player.transform.position + reverseAtan(angle + a) * mouse_pos.magnitude);
+                possibleLocations.Add((Vector2)player.transform.position + reverseAtan(angle + a) * Mathf.Clamp(mouse_pos.magnitude + Random.Range(-20, 20), 10, 100));
             }
         }
         return possibleLocations;
@@ -253,5 +269,86 @@ public class bossScript : MonoBehaviour
     Vector2 reverseAtan(float angle)
     {
         return new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+    }
+    void Pathfind(Vector2 target)
+    {
+        if ((target - (Vector2)transform.position).magnitude > 3)
+        {
+            if (RaycastInDirection(angleToTarget, sight).hit.collider == null)
+            {
+                rayset = false;
+            }
+            Vector2 normal = (target - (Vector2)transform.position).normalized;
+            if (!rayset)
+            {
+                angleToTarget = Mathf.Atan2(normal.x, -normal.y) * Mathf.Rad2Deg;
+            }
+            DirectionalRaycastResult r = RaycastInDirection(angleToTarget - 90, sight);
+            List<DirectionalRaycastResult> rays = new List<DirectionalRaycastResult>(0);
+            if (r.hit.collider != null)
+            {
+                for (int a = -180; a < 180; a += 8)
+                {
+                    DirectionalRaycastResult r2d = RaycastInDirection(angleToTarget - 90 + a, 1000);
+                    if (r2d.hit.collider == null)
+                    {
+                        rays.Add(r2d);
+                    }
+                }
+                if (rays.Count > 0)
+                {
+                    rayset = true;
+                    Invoke("ClearRays", 2f);
+                    float greatestDist = 19999;
+                    float greatestAngle = 0;
+                    for (int i = 0; i < rays.Count; i++)
+                    {
+                        if ((((Vector2)transform.position + reverseAtan(rays[i].angle) * 20) - target).magnitude < greatestDist)
+                        {
+                            greatestAngle = rays[i].angle + 90;
+                            greatestDist = (((Vector2)transform.position + reverseAtan(rays[i].angle) * 20) - target).magnitude;
+                        }
+                    }
+                    angleToTarget = greatestAngle;
+                }
+            }
+            transform.position += (Vector3)reverseAtan(angleToTarget - 90) * PathSpeed;// * (target - (Vector2)transform.position).magnitude;
+        }else{
+            targetPosition = Vector2.zero;
+        }
+    }
+    DirectionalRaycastResult RaycastInDirection(float angle, float dist)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, reverseAtan(angle), dist, PathMask);
+        if (hit.collider == null)
+        {
+            Debug.DrawRay(transform.position, reverseAtan(angle) * dist, Color.yellow);
+        }
+        if (hit.collider != null)
+        {
+            Debug.DrawRay(transform.position, reverseAtan(angle) * hit.distance, Color.yellow);
+        }
+        return new DirectionalRaycastResult(hit, angle);
+    }
+    void ClearRays()
+    {
+        rayset = false;
+    }
+    void CheckVisibilityAfter()
+    {
+        canStillCheckPlayerVis = true;
+        if (!CanSeePlayer())
+        {
+            List<Vector2> possibleLocations = CalculateLOSPosition();
+            if (possibleLocations.Count > 0)
+            {
+                targetPosition = possibleLocations[(int)Mathf.Round(Random.Range(0, possibleLocations.Count - 1))];
+            }
+        }
+    }
+    Vector3 Hover(Vector3 current, float amplitude){
+        Vector3 newPos = current;
+        newPos += new Vector3(Mathf.Sin(Time.time), Mathf.Cos(Time.time)) * amplitude;
+        return newPos;
     }
 }
