@@ -79,13 +79,6 @@ public class bossScript : MonoBehaviour
                     state = States.laser;
                     break;
                 case States.laser:
-                    GetComponent<BoxCollider2D>().enabled = true;
-                    transform.GetChild(0).GetComponent<Renderer>().enabled = true;
-                    transform.position = new Vector3(0, 20, 0);
-                    Destroy(laser);
-                    state = States.blast;
-                    beamPivot.gameObject.SetActive(true);
-                    Invoke("TargetLock", 5f);
                     break;
             }
         }

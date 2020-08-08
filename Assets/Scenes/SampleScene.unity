@@ -6124,7 +6124,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 891470193}
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.28, y: 2.2563214, z: 0}
+  m_LocalPosition: {x: -0.28, y: 2.2564836, z: 0}
   m_LocalScale: {x: 0.24999994, y: 0.24999994, z: 1}
   m_Children: []
   m_Father: {fileID: 1271438896}
@@ -6206,7 +6206,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 893415938}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1368684e-13, y: 10.004709, z: 0}
+  m_LocalPosition: {x: -1.1368684e-13, y: 10.005358, z: 0}
   m_LocalScale: {x: 0.87, y: 20, z: 1}
   m_Children: []
   m_Father: {fileID: 1271438896}
@@ -12576,7 +12576,12 @@ MonoBehaviour:
   ExcludePlayerlm:
     serializedVersion: 2
     m_Bits: 807
-  PathSpeed: 0
+  PathSpeed: 1
+  PathMask:
+    serializedVersion: 2
+    m_Bits: 7
+  sight: 37.69
+  amplitude: 0.1
 --- !u!61 &1935194394
 BoxCollider2D:
   m_ObjectHideFlags: 0
