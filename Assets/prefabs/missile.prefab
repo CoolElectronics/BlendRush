@@ -362,6 +362,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 7c7c984bbd01a4f7881153c486f38729, type: 3}
   - {fileID: 21300000, guid: ac922f9c07016413fa2ff5a2cccb6013, type: 3}
   - {fileID: 21300000, guid: 61f45191598344100ba35968145253e2, type: 3}
+  timer: 180
   explosion: {fileID: 5271260096397510174, guid: b65de573fffd74be3b703c80c53fdd68,
     type: 3}
   boomspeed: 25

@@ -5552,7 +5552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dba49ce762c8948c2b0ac9ec90d17ed1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 1
+  health: 1000
   image: {fileID: 1865754145}
   hitParticles: {fileID: 4366828931370628074, guid: b9b038fe6d2664ca48341bb57fb867fc,
     type: 3}
@@ -6124,7 +6124,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 891470193}
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.28, y: 2.2564836, z: 0}
+  m_LocalPosition: {x: -0.28, y: 2.2571483, z: 0}
   m_LocalScale: {x: 0.24999994, y: 0.24999994, z: 1}
   m_Children: []
   m_Father: {fileID: 1271438896}
@@ -6206,7 +6206,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 893415938}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1368684e-13, y: 10.005358, z: 0}
+  m_LocalPosition: {x: -1.1368684e-13, y: 10.008017, z: 0}
   m_LocalScale: {x: 0.87, y: 20, z: 1}
   m_Children: []
   m_Father: {fileID: 1271438896}
@@ -6534,7 +6534,7 @@ GameObject:
   - component: {fileID: 1067956055}
   m_Layer: 0
   m_Name: Boundaries
-  m_TagString: Untagged
+  m_TagString: Boundary
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7106,7 +7106,7 @@ GameObject:
   - component: {fileID: 1475700152}
   m_Layer: 0
   m_Name: Boundaries
-  m_TagString: Untagged
+  m_TagString: Boundary
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7214,7 +7214,7 @@ GameObject:
   - component: {fileID: 1496649714}
   m_Layer: 0
   m_Name: Boundaries
-  m_TagString: Untagged
+  m_TagString: Boundary
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12409,7 +12409,7 @@ GameObject:
   - component: {fileID: 1917649960}
   m_Layer: 0
   m_Name: Boundaries
-  m_TagString: Untagged
+  m_TagString: Boundary
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12518,7 +12518,7 @@ GameObject:
   - component: {fileID: 1935194394}
   m_Layer: 5
   m_Name: FirstBoss
-  m_TagString: Untagged
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12559,13 +12559,9 @@ MonoBehaviour:
   speed: 30
   missileObject: {fileID: 5937958202549653753, guid: e9e94c9318a6d4ca886af8a2c48161a5,
     type: 3}
-  isBeingHit: 0
-  isBeingHyperHit: 0
-  health: 100
   image: {fileID: 2101626789}
   state: 0
   laser: {fileID: 7511550659312851539, guid: 349f5df688ba347b5a1e07468494952d, type: 3}
-  lvl: {fileID: 0}
   timeUntilBlast: 0.09
   beamPivot: {fileID: 169814069}
   telegraphedColor: {r: 0.6199374, g: 0, b: 1, a: 1}
@@ -12577,11 +12573,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 807
   PathSpeed: 1
+  emitterObj: {fileID: 2598607407426875477, guid: 46520efe1dc5645bfa30e492f76c717a,
+    type: 3}
+  amplitude: 0.1
   PathMask:
     serializedVersion: 2
     m_Bits: 7
   sight: 37.69
-  amplitude: 0.1
+  health: 100
 --- !u!61 &1935194394
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12595,18 +12594,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 1.0056992, y: 0.0000076293945}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 24, y: 13}
+    oldSize: {x: 64, y: 36}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 24, y: 13}
+  m_Size: {x: 50.148193, y: 17.022781}
   m_EdgeRadius: 0
 --- !u!4 &1935194396
 Transform:

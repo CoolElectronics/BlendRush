@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class bossScript : MonoBehaviour
 {
+    [Header("BossSettings")]
     [SerializeField]
     GameObject bullet;
     [SerializeField]
@@ -13,25 +14,21 @@ public class bossScript : MonoBehaviour
     float speed;
     [SerializeField]
     GameObject missileObject;
-    public bool isBeingHit = false;
-    public bool isBeingHyperHit = false;
-    public float health = 100;
     [SerializeField]
     Image image;
-    public enum States { shooting, laser, blast, broken };
     [SerializeField]
     States state;
     [SerializeField]
     GameObject laser;
     [SerializeField]
-    GameObject lvl;
-    [SerializeField]
     float timeUntilBlast;
     [SerializeField]
     Transform beamPivot;
     Color defaultC;
-    public Color telegraphedColor;
-    public Color brokenColor;
+    [SerializeField]
+    Color telegraphedColor;
+    [SerializeField]
+    Color brokenColor;
 
     SpriteRenderer rendererObj;
     [SerializeField]
@@ -41,12 +38,36 @@ public class bossScript : MonoBehaviour
     Vector2 targetPosition;
     [SerializeField]
     float PathSpeed;
-    public LayerMask PathMask;
-    public float sight;
+    [SerializeField]
+    GameObject emitterObj;
+    [SerializeField]
+    float amplitude;
+    [SerializeField]
+    LayerMask PathMask;
+    [SerializeField]
+    float sight;
+    // 
+    // 
+    // 
+    // 
+    // 
+    // Hidden
+    // 
+    // 
+    // 
+    // 
+    // 
+
+    [Header("HiddenVars")]
+    [HideInInspector]
+    // Health
+    public float health = 100;
     bool rayset = false;
     float angleToTarget = 0;
     bool canStillCheckPlayerVis = true;
-    public float amplitude;
+    int emitters = 0;
+    bool missilesActive = false;
+    public enum States { shooting, laser, blast, broken };
     void Start()
     {
         rendererObj = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
@@ -56,7 +77,6 @@ public class bossScript : MonoBehaviour
             case States.shooting:
                 Invoke("Shoot", 5f);
                 Invoke("TeleShoot", 4.6f);
-                Invoke("ShootMissile", 10f);
                 Invoke("BreakDown", Random.Range(15.0f, 60.0f));
                 break;
             case States.laser:
@@ -66,10 +86,6 @@ public class bossScript : MonoBehaviour
 
     void Update()
     {
-        if (isBeingHyperHit)
-        {
-            health -= 2f;
-        }
         if (health < 0)
         {
             health = 100;
@@ -86,9 +102,21 @@ public class bossScript : MonoBehaviour
         switch (state)
         {
             case States.shooting:
-                if (targetPosition != Vector2.zero){
+                if (health < 75 && !missilesActive)
+                {
+                    missilesActive = true;
+                    ShootMissile();
+                }
+                if (health < 50 && emitters < 1)
+                {
+                    MakeNewEmitter();
+                }
+                if (targetPosition != Vector2.zero)
+                {
                     Pathfind(targetPosition);
-                }else{
+                }
+                else
+                {
                     transform.position = Hover(transform.position, amplitude);
                 }
                 Debug.DrawRay(targetPosition, new Vector3(0, 1, 0), Color.red, 0.1f);
@@ -96,7 +124,8 @@ public class bossScript : MonoBehaviour
                 Vector2 edgeVector = Camera.main.ViewportToWorldPoint(topRightCorner);
                 if (!CanSeePlayer())
                 {
-                    if (canStillCheckPlayerVis){
+                    if (canStillCheckPlayerVis)
+                    {
                         canStillCheckPlayerVis = false;
                         Invoke("CheckVisibilityAfter", 1.5f);
                     }
@@ -120,10 +149,10 @@ public class bossScript : MonoBehaviour
     }
     void ShootMissile()
     {
-        if (state == States.shooting)
+        if (state == States.shooting || state == States.broken)
         {
             GameObject tempMissile = Instantiate(missileObject, transform.position, Quaternion.identity);
-            tempMissile.GetComponent<MoveTowards>().target = player.transform;
+            tempMissile.GetComponent<Missile>().target = player.transform;
             Invoke("ShootMissile", 7f);
         }
     }
@@ -170,7 +199,6 @@ public class bossScript : MonoBehaviour
         rendererObj.color = defaultC;
         Invoke("Shoot", 1.1f);
         Invoke("TeleShoot", 0.7f);
-        Invoke("ShootMissile", 7f);
     }
     void TargetLock()
     {
@@ -188,21 +216,9 @@ public class bossScript : MonoBehaviour
         {
             health -= 2.5f;
         }
-        if (col.gameObject.tag == "HyperBeam")
-        {
-            isBeingHyperHit = true;
-        }
     }
     void OnTriggerExit2D(Collider2D col)
     {
-        if (col.gameObject.tag == "Beam")
-        {
-            isBeingHit = false;
-        }
-        if (col.gameObject.tag == "HyperBeam")
-        {
-            isBeingHyperHit = false;
-        }
     }
 
     void OnCollisionEnter2D(Collision2D col)
@@ -212,6 +228,11 @@ public class bossScript : MonoBehaviour
             health -= 14;
             Destroy(col.gameObject);
         }
+    }
+    void MakeNewEmitter(){
+        emitters++;
+        Instantiate(emitterObj, transform.position, Quaternion.identity);
+        Invoke("MakeNewEmitter",10f);
     }
     bool CanSeePlayer()
     {
@@ -306,7 +327,9 @@ public class bossScript : MonoBehaviour
                 }
             }
             transform.position += (Vector3)reverseAtan(angleToTarget - 90) * PathSpeed;// * (target - (Vector2)transform.position).magnitude;
-        }else{
+        }
+        else
+        {
             targetPosition = Vector2.zero;
         }
     }
@@ -339,7 +362,8 @@ public class bossScript : MonoBehaviour
             }
         }
     }
-    Vector3 Hover(Vector3 current, float amplitude){
+    Vector3 Hover(Vector3 current, float amplitude)
+    {
         Vector3 newPos = current;
         newPos += new Vector3(Mathf.Sin(Time.time), Mathf.Cos(Time.time)) * amplitude;
         return newPos;

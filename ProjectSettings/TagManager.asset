@@ -12,6 +12,9 @@ TagManager:
   - breakable
   - Explosion
   - ammoCrate
+  - Boss
+  - LaserEmitter
+  - Boundary
   layers:
   - Default
   - TransparentFX

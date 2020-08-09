@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-public class MoveTowards : MonoBehaviour
+public class Missile : MonoBehaviour
 {
     public Transform target;
     [SerializeField]
@@ -21,7 +21,7 @@ public class MoveTowards : MonoBehaviour
     [SerializeField]
     SpriteRenderer second2;
     public Sprite[] numbers;
-    int timer = 120;
+    public int timer = 120;
     public GameObject explosion;
     public float boomspeed;
     public int explosiongap;
@@ -32,12 +32,14 @@ public class MoveTowards : MonoBehaviour
     void Update()
     {
         timer--;
-        if (timer == 0){
+        if (timer == 0)
+        {
             boom();
             return;
         }
         string time = toTime(timer);
-        if (time.Length >= 8){
+        if (time.Length >= 8)
+        {
             string num1 = time[4].ToString();
             string num2 = time[6].ToString();
             string num3 = time[7].ToString();
@@ -62,21 +64,26 @@ public class MoveTowards : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D col)
     {
-        boom();
+        if (col.gameObject.CompareTag("Boundary") || col.gameObject.CompareTag("Player"))
+        {
+            boom();
+        }
     }
     string toTime(int time)
     {
         return TimeSpan.FromSeconds(time).ToString();
     }
-    void boom(){
+    void boom()
+    {
         Destroy(gameObject);
         Vector2 normalVec = (transform.position - target.position).normalized;
-        float angleBetweenPlayer = -Mathf.Atan2(normalVec.x,normalVec.y) * Mathf.Rad2Deg - 90 + explosiongap / 2;
-        int offset = (int)Mathf.Round(angleBetweenPlayer) + UnityEngine.Random.Range(-30,30);
-        for (int r = offset; r < 360 + offset - explosiongap; r+= 5)
+        float angleBetweenPlayer = -Mathf.Atan2(normalVec.x, normalVec.y) * Mathf.Rad2Deg - 90 + explosiongap / 2;
+        int offset = (int)Mathf.Round(angleBetweenPlayer) + UnityEngine.Random.Range(-30, 30);
+        for (int r = offset; r < 360 + offset - explosiongap; r += 5)
         {
             GameObject tempBullet = Instantiate(explosion, transform.position, Quaternion.identity);
             tempBullet.transform.rotation = Quaternion.Euler(0, 0, r - 90);
+            Destroy(tempBullet, 20);
             tempBullet.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Cos(r * Mathf.Deg2Rad), Mathf.Sin(r * Mathf.Deg2Rad)) * boomspeed;
         }
     }
