@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 692868947713333939}
   m_Layer: 10
   m_Name: Cylinder
-  m_TagString: Beam
+  m_TagString: Laser
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -259,4 +259,4 @@ MonoBehaviour:
   lm:
     serializedVersion: 2
     m_Bits: 23
-  xOffset: 6.83
+  xOffset: 0
