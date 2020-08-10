@@ -367,6 +367,8 @@ MonoBehaviour:
     type: 3}
   boomspeed: 25
   explosiongap: 35
+  tick: {fileID: 8300000, guid: fdef81b4de6a64bb6a2e473aefc8e711, type: 3}
+  explode: {fileID: 8300000, guid: f5e432a7bd9444030abe1147e9794fd4, type: 3}
 --- !u!50 &5937958202549653749
 Rigidbody2D:
   serializedVersion: 4

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using SoundTools;
 public class bossScript : MonoBehaviour
 {
     [Header("BossSettings")]
@@ -46,6 +47,13 @@ public class bossScript : MonoBehaviour
     LayerMask PathMask;
     [SerializeField]
     float sight;
+    [SerializeField]
+    AudioClip hurtSound;
+    [Header("Check to see if target is not close to walls")]
+    [SerializeField]
+    float avoidRadius;
+    [SerializeField]
+    LayerMask avoidLm;
     // 
     // 
     // 
@@ -214,7 +222,7 @@ public class bossScript : MonoBehaviour
     {
         if (col.gameObject.tag == "Beam")
         {
-            health -= 2.5f;
+            Damage(2.5f);
         }
     }
     void OnTriggerExit2D(Collider2D col)
@@ -225,14 +233,15 @@ public class bossScript : MonoBehaviour
     {
         if (col.gameObject.tag == "ParriedBullet")
         {
-            health -= 14;
+            Damage(14);
             Destroy(col.gameObject);
         }
     }
-    void MakeNewEmitter(){
+    void MakeNewEmitter()
+    {
         emitters++;
         Instantiate(emitterObj, transform.position, Quaternion.identity);
-        Invoke("MakeNewEmitter",10f);
+        Invoke("MakeNewEmitter", 10f);
     }
     bool CanSeePlayer()
     {
@@ -358,7 +367,15 @@ public class bossScript : MonoBehaviour
             List<Vector2> possibleLocations = CalculateLOSPosition();
             if (possibleLocations.Count > 0)
             {
-                targetPosition = possibleLocations[(int)Mathf.Round(Random.Range(0, possibleLocations.Count - 1))];
+                int safety = 0;
+                while (true)
+                {
+                    safety++;
+                    if (safety > 100)
+                        break;
+                    targetPosition = possibleLocations[(int)Mathf.Round(Random.Range(0, possibleLocations.Count - 1))];
+                    if (Physics2D.OverlapCircle(targetPosition, avoidRadius, avoidLm)) ;
+                }
             }
         }
     }
@@ -367,5 +384,12 @@ public class bossScript : MonoBehaviour
         Vector3 newPos = current;
         newPos += new Vector3(Mathf.Sin(Time.time), Mathf.Cos(Time.time)) * amplitude;
         return newPos;
+    }
+    void Damage(float amount)
+    {
+        health -= amount;
+        shake.e.Shake(1f, 0.3f);
+        soundTools.i.SpawnNewSoundInstance(hurtSound, new SoundSettings());
+
     }
 }

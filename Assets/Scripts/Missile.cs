@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using SoundTools;
 public class Missile : MonoBehaviour
 {
     public Transform target;
@@ -21,23 +22,30 @@ public class Missile : MonoBehaviour
     [SerializeField]
     SpriteRenderer second2;
     public Sprite[] numbers;
-    public int timer = 120;
+    public float timer = 120;
     public GameObject explosion;
     public float boomspeed;
     public int explosiongap;
+    [SerializeField]
+    AudioClip tick;
+    [SerializeField]
+    AudioClip explode;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
     void Update()
     {
-        timer--;
-        if (timer == 0)
+        timer -= Time.deltaTime * 30;
+        if (Mathf.Round(timer) % 10 == 4){
+            soundTools.i.SpawnNewSoundInstance(tick, new SoundSettings(0.5f));
+        }
+        if (timer <= 0)
         {
             boom();
             return;
         }
-        string time = toTime(timer);
+        string time = toTime((int)Mathf.Round(timer));
         if (time.Length >= 8)
         {
             string num1 = time[4].ToString();
@@ -75,10 +83,12 @@ public class Missile : MonoBehaviour
     }
     void boom()
     {
+        shake.e.Shake(0.3f, 1.3f);
+        soundTools.i.SpawnNewSoundInstance(explode, new SoundSettings());
         Destroy(gameObject);
         Vector2 normalVec = (transform.position - target.position).normalized;
         float angleBetweenPlayer = -Mathf.Atan2(normalVec.x, normalVec.y) * Mathf.Rad2Deg - 90 + explosiongap / 2;
-        int offset = (int)Mathf.Round(angleBetweenPlayer) + UnityEngine.Random.Range(-30, 30);
+        int offset = (int)Mathf.Round(angleBetweenPlayer) + UnityEngine.Random.Range(-45, 45);
         for (int r = offset; r < 360 + offset - explosiongap; r += 5)
         {
             GameObject tempBullet = Instantiate(explosion, transform.position, Quaternion.identity);

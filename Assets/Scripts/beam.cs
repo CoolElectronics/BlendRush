@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using SoundTools;
 public class beam : MonoBehaviour
 {
     [SerializeField]
@@ -30,11 +30,15 @@ public class beam : MonoBehaviour
     public int ammo;
     public int maxAmmo = 5;
     public GameObject ammoCrate;
+    GameObject[] ammoPositions;
+    [SerializeField]
+    AudioClip pickupSound;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         m = GetComponent<move>();
         ammo = maxAmmo;
+        ammoPositions = GameObject.FindGameObjectsWithTag("ammoCrate");
     }
 
     // Update is called once per frame
@@ -104,14 +108,13 @@ public class beam : MonoBehaviour
     }
     void spawnAmmoCrate()
     {
-        Vector2 topRightCorner = new Vector2(1, 1);
-        Vector2 edgeVector = Camera.main.ViewportToWorldPoint(topRightCorner);
-        Vector2 RandomPos = new Vector2(Random.Range(-edgeVector.x, edgeVector.x), Random.Range(-edgeVector.y, (edgeVector.y / 5) * 2));
-        Instantiate(ammoCrate,RandomPos,Quaternion.identity);
+        Vector3 ammoPos = ammoPositions[Random.Range(0,ammoPositions.Length - 1)].transform.position;
+        Instantiate(ammoCrate,ammoPos,Quaternion.identity);
     }
     private void OnTriggerEnter2D(Collider2D col) {
         if (col.gameObject.tag == "ammoCrate"){
             Destroy(col.gameObject);
+            soundTools.i.SpawnNewSoundInstance(pickupSound, new SoundSettings());
             ammo = maxAmmo;
         }
     }
