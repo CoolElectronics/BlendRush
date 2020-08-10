@@ -114,7 +114,7 @@ GameObject:
   - component: {fileID: 6301726652853773686}
   - component: {fileID: 1559122181265758304}
   - component: {fileID: 692868947713333939}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Cylinder
   m_TagString: Laser
   m_Icon: {fileID: 0}

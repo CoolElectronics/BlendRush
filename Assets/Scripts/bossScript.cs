@@ -161,7 +161,7 @@ public class bossScript : MonoBehaviour
         {
             GameObject tempMissile = Instantiate(missileObject, transform.position, Quaternion.identity);
             tempMissile.GetComponent<Missile>().target = player.transform;
-            Invoke("ShootMissile", 7f);
+            Invoke("ShootMissile", 12f);
         }
     }
     void Shoot()
