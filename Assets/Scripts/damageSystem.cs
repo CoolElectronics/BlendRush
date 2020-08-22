@@ -12,6 +12,7 @@ public class damageSystem : MonoBehaviour
     public float maxInvulnerableTime;
     float invulnerableTime;
     public GameObject shield;
+    public bool isDashing = false;
 
     [SerializeField]
     public AudioClip hurtSound;
@@ -29,6 +30,11 @@ public class damageSystem : MonoBehaviour
         if (health <= 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        if (isDashing){
+            transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+        }else{
+            transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.None;
         }
     }
     void OnTriggerEnter2D(Collider2D col)
@@ -53,7 +59,7 @@ public class damageSystem : MonoBehaviour
     }
     void Damage(int amount)
     {
-        if (invulnerableTime < 0)
+        if (invulnerableTime < 0 && !isDashing)
         {
             health -= amount;
             invulnerableTime = maxInvulnerableTime;

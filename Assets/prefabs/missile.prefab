@@ -349,7 +349,7 @@ MonoBehaviour:
   isVelocity: 1
   rotate: 1
   min: {fileID: 2745349472681453443}
-  second: {fileID: 2745349472681453443}
+  second: {fileID: 973286353721050590}
   second2: {fileID: 6114466315978914689}
   numbers:
   - {fileID: 21300000, guid: cd2159d14141141c19db601a288fe766, type: 3}

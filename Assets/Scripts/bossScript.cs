@@ -25,6 +25,8 @@ public class bossScript : MonoBehaviour
     float timeUntilBlast;
     [SerializeField]
     Transform beamPivot;
+    [SerializeField]
+    Transform lightPivot;
     Color defaultC;
     [SerializeField]
     Color telegraphedColor;
@@ -110,6 +112,12 @@ public class bossScript : MonoBehaviour
         switch (state)
         {
             case States.shooting:
+                Vector3 mouse_pos = player.transform.position;
+                Vector3 object_pos = transform.position;
+                mouse_pos.x = mouse_pos.x - object_pos.x;
+                mouse_pos.y = mouse_pos.y - object_pos.y;
+                float angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
+                lightPivot.rotation = Quaternion.Euler(0, 0, angle + 90);
                 if (health < 75 && !missilesActive)
                 {
                     missilesActive = true;

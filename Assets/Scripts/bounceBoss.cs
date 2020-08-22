@@ -20,8 +20,10 @@ public class bounceBoss : MonoBehaviour
     [SerializeField]
     Image image;
     Vector3 direction;
+    Camera cameraMain;
     void Start()
     {
+        cameraMain = Camera.main;
         // rendererObj = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
         switch (state)
         {
@@ -49,6 +51,11 @@ public class bounceBoss : MonoBehaviour
                     break;
             }
         }
+        Vector3 imagepos = transform.position;
+        imagepos.z = 10;
+        imagepos = cameraMain.WorldToScreenPoint(imagepos);
+        imagepos.z = 0;
+        image.gameObject.transform.parent.position = imagepos; 
         image.fillAmount = health / 100;
         switch (state)
         {
@@ -61,6 +68,13 @@ public class bounceBoss : MonoBehaviour
                 break;
         }
     }
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Beam")
+        {
+            Damage(2.5f);
+        }
+    }
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.tag == "Player")
@@ -70,15 +84,22 @@ public class bounceBoss : MonoBehaviour
         else
         {
             ContactPoint2D[] points = new ContactPoint2D[10];
-            GetComponent<BoxCollider2D>().GetContacts(points);
+            GetComponent<CircleCollider2D>().GetContacts(points);
             if (points.Length > 0)
             {
                 direction = Vector3.Reflect(direction, points[0].normal);
                 if (col.gameObject.tag == "breakable")
                 {
-                    Destroy(col.gameObject);
+                    //Destroy(col.gameObject);
                 }
             }
         }
+    }
+    void Damage(float amount)
+    {
+        health -= amount;
+        shake.e.Shake(1f, 0.3f);
+       // soundTools.i.SpawnNewSoundInstance(hurtSound, new SoundSettings());
+
     }
 }

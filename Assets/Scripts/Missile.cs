@@ -37,7 +37,7 @@ public class Missile : MonoBehaviour
     void Update()
     {
         timer -= Time.deltaTime * 30;
-        if (Mathf.Round(timer) % 10 == 4){
+        if (Mathf.Round(timer) % 20 == 4){
             soundTools.i.SpawnNewSoundInstance(tick, new SoundSettings(0.5f));
         }
         if (timer <= 0)

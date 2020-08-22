@@ -33,8 +33,14 @@ public class beam : MonoBehaviour
     GameObject[] ammoPositions;
     [SerializeField]
     AudioClip pickupSound;
+    float timeSinceDash;
+    public float maxDashInvTime;
+    public float reloadTime;
+    bool reloaded = true;
+    GameObject rIndicator;
     void Start()
     {
+        rIndicator = transform.GetChild(3).gameObject;
         rb = GetComponent<Rigidbody2D>();
         m = GetComponent<move>();
         ammo = maxAmmo;
@@ -44,17 +50,32 @@ public class beam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (rIndicator.transform.localPosition.y < 4){
+            if (rIndicator.transform.localPosition.y > 1){
+                rIndicator.transform.localPosition = new Vector3(0,Mathf.Pow(rIndicator.transform.localPosition.y,1.3f),0);
+            }else{
+                rIndicator.transform.localPosition = new Vector3(0,rIndicator.transform.localPosition.y + 0.3f,0);
+            }
+        }else{
+            rIndicator.SetActive(false);
+        }
         if (isTimeShifting)
         {
             if (time >= 0.9)
             {
                 isTimeShifting = false;
-                Time.timeScale = 1;
+                //Time.timeScale = 1;
             }
         }
         if (time < 1)
         {
             time += returnSpeed;
+        }
+        if (timeSinceDash <= 0){
+            GetComponent<damageSystem>().isDashing = false;
+            gameObject.layer = 4;
+        }else{
+            timeSinceDash -= Time.deltaTime;
         }
         if (m.timeSinceGrounded > 0)
         {
@@ -78,8 +99,10 @@ public class beam : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0))
         {
-            if (ammo > 0)
+            if (ammo > 0 && reloaded)
             {
+                reloaded = false;
+                Invoke("Reload",reloadTime);
                 laserOn = true;
                 timeSincePress = pulseDuration;
                 if (canKnock)
@@ -87,7 +110,10 @@ public class beam : MonoBehaviour
                     canKnock = false;
                     shake.e.Shake(screenShake, duration);
                     time = reducedTime;
-                    Time.timeScale = 0;
+                    timeSinceDash = maxDashInvTime;
+                    GetComponent<damageSystem>().isDashing = true;
+                    //Time.timeScale = 0;
+                    gameObject.layer = 12;
                     isTimeShifting = true;
                     Instantiate(particles, transform.position, Quaternion.identity);
                     rb.velocity = (Vector2)mouse_pos.normalized * -knockback;
@@ -117,5 +143,10 @@ public class beam : MonoBehaviour
             soundTools.i.SpawnNewSoundInstance(pickupSound, new SoundSettings());
             ammo = maxAmmo;
         }
+    }
+    void Reload(){
+        reloaded = true;
+        rIndicator.transform.localPosition = new Vector3(0,-0.37f,0);
+        rIndicator.SetActive(true);
     }
 }
