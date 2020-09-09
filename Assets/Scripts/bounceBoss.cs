@@ -21,8 +21,11 @@ public class bounceBoss : MonoBehaviour
     Image image;
     Vector3 direction;
     Camera cameraMain;
+    [SerializeField]
+    GameObject bullet;
     void Start()
     {
+        
         cameraMain = Camera.main;
         // rendererObj = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
         switch (state)
@@ -34,6 +37,8 @@ public class bounceBoss : MonoBehaviour
             case States.bounceShoot:
                 break;
         }
+        player = GameObject.FindGameObjectsWithTag("Player")[0];
+        Shoot();
     }
 
     void Update()
@@ -55,7 +60,7 @@ public class bounceBoss : MonoBehaviour
         imagepos.z = 10;
         imagepos = cameraMain.WorldToScreenPoint(imagepos);
         imagepos.z = 0;
-        image.gameObject.transform.parent.position = imagepos; 
+        image.gameObject.transform.parent.position = imagepos;
         image.fillAmount = health / 100;
         switch (state)
         {
@@ -67,6 +72,18 @@ public class bounceBoss : MonoBehaviour
             default:
                 break;
         }
+    }
+    void Shoot()
+    {
+        Vector3 mouse_pos = player.transform.position;
+        Vector3 object_pos = transform.position;
+        mouse_pos.x = mouse_pos.x - object_pos.x;
+        mouse_pos.y = mouse_pos.y - object_pos.y;
+        float angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
+        GameObject tempBullet = Instantiate(bullet, transform.position, Quaternion.identity);
+        tempBullet.transform.rotation = Quaternion.Euler(0, 0, angle - 90);
+        tempBullet.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)) * speed;
+        Invoke("Shoot",5f);
     }
     void OnTriggerEnter2D(Collider2D col)
     {
@@ -99,7 +116,7 @@ public class bounceBoss : MonoBehaviour
     {
         health -= amount;
         shake.e.Shake(1f, 0.3f);
-       // soundTools.i.SpawnNewSoundInstance(hurtSound, new SoundSettings());
+        // soundTools.i.SpawnNewSoundInstance(hurtSound, new SoundSettings());
 
     }
 }

@@ -20,11 +20,14 @@ public class bouncyBall : MonoBehaviour
         hpPrefab.parent = GameObject.Find("Canvas").transform;
         direction = new Vector3(Random.Range(-1f, 1f), 1f, 0f).normalized;
         GetComponent<Rigidbody2D>().velocity = direction * speed;
+        PlayerLock();
     }
-
+    void PlayerLock(){
+        direction = (player.transform.position - transform.position).normalized;
+        Invoke("PlayerLock",3f);
+    }
     void Update()
     {
-
         GetComponent<Rigidbody2D>().velocity = direction * speed;
         Vector3 imagepos = transform.position;
         imagepos.z = 10;

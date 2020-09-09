@@ -56,6 +56,8 @@ public class bossScript : MonoBehaviour
     float avoidRadius;
     [SerializeField]
     LayerMask avoidLm;
+    [SerializeField]
+    List<float> phaseThresholds;
     // 
     // 
     // 
@@ -77,6 +79,7 @@ public class bossScript : MonoBehaviour
     bool canStillCheckPlayerVis = true;
     int emitters = 0;
     bool missilesActive = false;
+    Vector3 lockedPlayerPos;
     public enum States { shooting, laser, blast, broken };
     void Start()
     {
@@ -93,7 +96,6 @@ public class bossScript : MonoBehaviour
                 break;
         }
     }
-
     void Update()
     {
         if (health < 0)
@@ -118,12 +120,12 @@ public class bossScript : MonoBehaviour
                 mouse_pos.y = mouse_pos.y - object_pos.y;
                 float angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
                 lightPivot.rotation = Quaternion.Euler(0, 0, angle + 90);
-                if (health < 75 && !missilesActive)
+                if (health < phaseThresholds[1] && !missilesActive)
                 {
                     missilesActive = true;
                     ShootMissile();
                 }
-                if (health < 50 && emitters < 1)
+                if (health < phaseThresholds[2] && emitters < 1)
                 {
                     MakeNewEmitter();
                 }
@@ -163,9 +165,13 @@ public class bossScript : MonoBehaviour
                 break;
         }
     }
+    void LockLightPos(){
+        lockedPlayerPos = player.transform.position;
+        //Instantiate(lightningPrefab, lockedPlayerPos,Quaternion.identity);
+    }
     void ShootMissile()
     {
-        if (state == States.shooting || state == States.broken)
+        if ((state == States.shooting || state == States.broken) && health > phaseThresholds[2])
         {
             GameObject tempMissile = Instantiate(missileObject, transform.position, Quaternion.identity);
             tempMissile.GetComponent<Missile>().target = player.transform;
@@ -239,11 +245,11 @@ public class bossScript : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "ParriedBullet")
-        {
-            Damage(14);
-            Destroy(col.gameObject);
-        }
+        // if (col.gameObject.tag == "ParriedBullet")
+        // {
+        //     Damage(14);
+        //     Destroy(col.gameObject);
+        // }
     }
     void MakeNewEmitter()
     {
@@ -379,10 +385,12 @@ public class bossScript : MonoBehaviour
                 while (true)
                 {
                     safety++;
-                    if (safety > 100)
+                    if (safety > 200)
                         break;
                     targetPosition = possibleLocations[(int)Mathf.Round(Random.Range(0, possibleLocations.Count - 1))];
-                    if (Physics2D.OverlapCircle(targetPosition, avoidRadius, avoidLm)) ;
+                    if (!Physics2D.OverlapCircle(targetPosition, avoidRadius, avoidLm)){
+                        break;
+                    }
                 }
             }
         }

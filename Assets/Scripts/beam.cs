@@ -37,10 +37,8 @@ public class beam : MonoBehaviour
     public float maxDashInvTime;
     public float reloadTime;
     bool reloaded = true;
-    GameObject rIndicator;
     void Start()
     {
-        rIndicator = transform.GetChild(3).gameObject;
         rb = GetComponent<Rigidbody2D>();
         m = GetComponent<move>();
         ammo = maxAmmo;
@@ -50,15 +48,6 @@ public class beam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (rIndicator.transform.localPosition.y < 4){
-            if (rIndicator.transform.localPosition.y > 1){
-                rIndicator.transform.localPosition = new Vector3(0,Mathf.Pow(rIndicator.transform.localPosition.y,1.3f),0);
-            }else{
-                rIndicator.transform.localPosition = new Vector3(0,rIndicator.transform.localPosition.y + 0.3f,0);
-            }
-        }else{
-            rIndicator.SetActive(false);
-        }
         if (isTimeShifting)
         {
             if (time >= 0.9)
@@ -146,7 +135,5 @@ public class beam : MonoBehaviour
     }
     void Reload(){
         reloaded = true;
-        rIndicator.transform.localPosition = new Vector3(0,-0.37f,0);
-        rIndicator.SetActive(true);
     }
 }
