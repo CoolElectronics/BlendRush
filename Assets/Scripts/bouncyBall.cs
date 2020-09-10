@@ -16,6 +16,12 @@ public class bouncyBall : MonoBehaviour
     void Start()
     {
         cameraMain = Camera.main;
+        GameObject[] playerList = GameObject.FindGameObjectsWithTag("Player");
+        if (playerList.Length > 0){
+            player = playerList[0];
+        }else{
+            throw new System.Exception("Umm, so this is a game, which wouldn't be much fun without a player...");
+        }
         hpPrefab = Instantiate(hpPrefab);
         hpPrefab.parent = GameObject.Find("Canvas").transform;
         direction = new Vector3(Random.Range(-1f, 1f), 1f, 0f).normalized;
@@ -24,7 +30,7 @@ public class bouncyBall : MonoBehaviour
     }
     void PlayerLock(){
         direction = (player.transform.position - transform.position).normalized;
-        Invoke("PlayerLock",3f);
+        Invoke("PlayerLock",2f);
     }
     void Update()
     {
@@ -41,6 +47,7 @@ public class bouncyBall : MonoBehaviour
         if (col.gameObject.tag == "Player")
         {
             direction = (transform.position - player.transform.position).normalized;
+            player.GetComponent<damageSystem>().Damage(1);
         }
         else
         {
@@ -63,11 +70,17 @@ public class bouncyBall : MonoBehaviour
             Damage(5f);
         }
     }
-    void Damage(float amount)
+    public void Damage(float amount)
     {
         health -= amount;
         shake.e.Shake(1f, 0.3f);
+        if (health <= 0){
+            Kill();
+        }
         // soundTools.i.SpawnNewSoundInstance(hurtSound, new SoundSettings());
-
+    }
+    public void Kill(){
+        Destroy(hpPrefab.gameObject);
+        Destroy(gameObject,1f);
     }
 }

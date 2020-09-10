@@ -23,9 +23,17 @@ public class bounceBoss : MonoBehaviour
     Camera cameraMain;
     [SerializeField]
     GameObject bullet;
+    [SerializeField]
+    GameObject miniBoss;
+    int bulletsRemaining = 0;
+    [SerializeField]
+    int framesBetweenBullets = 4;
+    int framesRemaining = 0;
+    [SerializeField]
+    int numBullets = 10;
     void Start()
     {
-        
+
         cameraMain = Camera.main;
         // rendererObj = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
         switch (state)
@@ -73,7 +81,25 @@ public class bounceBoss : MonoBehaviour
                 break;
         }
     }
+    void FixedUpdate()
+    {
+        framesRemaining++;
+        if (framesRemaining == framesBetweenBullets)
+        {
+            framesRemaining = 0;
+            if (bulletsRemaining > 0)
+            {
+                Destroy(ShootBullet(),7f);
+                bulletsRemaining--;
+            }
+        }
+    }
     void Shoot()
+    {
+        bulletsRemaining = numBullets;
+        Invoke("Shoot", 10f);
+    }
+    GameObject ShootBullet()
     {
         Vector3 mouse_pos = player.transform.position;
         Vector3 object_pos = transform.position;
@@ -83,7 +109,7 @@ public class bounceBoss : MonoBehaviour
         GameObject tempBullet = Instantiate(bullet, transform.position, Quaternion.identity);
         tempBullet.transform.rotation = Quaternion.Euler(0, 0, angle - 90);
         tempBullet.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)) * speed;
-        Invoke("Shoot",5f);
+        return tempBullet;
     }
     void OnTriggerEnter2D(Collider2D col)
     {
@@ -117,6 +143,9 @@ public class bounceBoss : MonoBehaviour
         health -= amount;
         shake.e.Shake(1f, 0.3f);
         // soundTools.i.SpawnNewSoundInstance(hurtSound, new SoundSettings());
-
+        if (Random.value > 0.5f)
+        {
+            Instantiate(miniBoss, new Vector3(0, 0, 0), Quaternion.identity);
+        }
     }
 }

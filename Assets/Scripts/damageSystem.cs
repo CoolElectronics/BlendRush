@@ -57,7 +57,7 @@ public class damageSystem : MonoBehaviour
             Damage(1);
         }
     }
-    void Damage(int amount)
+    public void Damage(int amount)
     {
         if (invulnerableTime < 0 && !isDashing)
         {
