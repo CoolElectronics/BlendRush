@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using SoundTools;
 public class bossScript : MonoBehaviour
@@ -51,13 +52,18 @@ public class bossScript : MonoBehaviour
     float sight;
     [SerializeField]
     AudioClip hurtSound;
+    [SerializeField]
+    GameObject lightningPrefab;
+    [SerializeField]
+    List<float> phaseThresholds;
+    [SerializeField]
+    int emitterSpawnFrequency = 4;
     [Header("Check to see if target is not close to walls")]
     [SerializeField]
     float avoidRadius;
     [SerializeField]
     LayerMask avoidLm;
     [SerializeField]
-    List<float> phaseThresholds;
     // 
     // 
     // 
@@ -79,6 +85,7 @@ public class bossScript : MonoBehaviour
     bool canStillCheckPlayerVis = true;
     int emitters = 0;
     bool missilesActive = false;
+    int emitterHits = 0;
     Vector3 lockedPlayerPos;
     public enum States { shooting, laser, blast, broken };
     void Start()
@@ -88,9 +95,10 @@ public class bossScript : MonoBehaviour
         switch (state)
         {
             case States.shooting:
+                LockLightPos();
                 Invoke("Shoot", 5f);
                 Invoke("TeleShoot", 4.6f);
-                Invoke("BreakDown", Random.Range(15.0f, 60.0f));
+                //Invoke("BreakDown", Random.Range(15.0f, 60.0f));
                 break;
             case States.laser:
                 break;
@@ -100,15 +108,15 @@ public class bossScript : MonoBehaviour
     {
         if (health < 0)
         {
-            health = 100;
-            switch (state)
-            {
-                case States.shooting:
-                    state = States.laser;
-                    break;
-                case States.laser:
-                    break;
+            List<GameObject> rootObjects = new List<GameObject>();
+            Scene scene = SceneManager.GetActiveScene();
+            bossManager.i.DestroyBoss(0);
+            scene.GetRootGameObjects(rootObjects);
+            foreach (GameObject d in rootObjects){
+                if (d.layer == 5)
+                    Destroy(d);
             }
+            
         }
         image.fillAmount = health / 100;
         switch (state)
@@ -128,6 +136,9 @@ public class bossScript : MonoBehaviour
                 if (health < phaseThresholds[2] && emitters < 1)
                 {
                     MakeNewEmitter();
+
+                    MakeNewEmitter();
+                    emitterHits = 0;
                 }
                 if (targetPosition != Vector2.zero)
                 {
@@ -140,6 +151,10 @@ public class bossScript : MonoBehaviour
                 Debug.DrawRay(targetPosition, new Vector3(0, 1, 0), Color.red, 0.1f);
                 Vector2 topRightCorner = new Vector2(1, 1);
                 Vector2 edgeVector = Camera.main.ViewportToWorldPoint(topRightCorner);
+                if ((player.transform.position - transform.position).magnitude < avoidRadius && targetPosition == Vector2.zero)
+                {
+                    MoveToNewPosition();
+                }
                 if (!CanSeePlayer())
                 {
                     if (canStillCheckPlayerVis)
@@ -165,9 +180,12 @@ public class bossScript : MonoBehaviour
                 break;
         }
     }
-    void LockLightPos(){
+    void LockLightPos()
+    {
         lockedPlayerPos = player.transform.position;
-        //Instantiate(lightningPrefab, lockedPlayerPos,Quaternion.identity);
+        GameObject bolt = Instantiate(lightningPrefab, Vector3.zero, Quaternion.identity);
+        bolt.GetComponent<lightningBolt>().position = lockedPlayerPos;
+        Invoke("LockLightPos", Random.Range(3.0f, 7.0f));
     }
     void ShootMissile()
     {
@@ -197,6 +215,15 @@ public class bossScript : MonoBehaviour
             tempBullet = Instantiate(bullet, transform.position, Quaternion.identity);
             tempBullet.transform.rotation = Quaternion.Euler(0, 0, angle - 100);
             tempBullet.GetComponent<Rigidbody2D>().velocity = -new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad - 10), Mathf.Sin(angle * Mathf.Deg2Rad - 10)) * speed;
+            if (health > phaseThresholds[1])
+            {
+                tempBullet = Instantiate(bullet, transform.position, Quaternion.identity);
+                tempBullet.transform.rotation = Quaternion.Euler(0, 0, angle - 110);
+                tempBullet.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad - 20), Mathf.Sin(angle * Mathf.Deg2Rad - 20)) * speed;
+                tempBullet = Instantiate(bullet, transform.position, Quaternion.identity);
+                tempBullet.transform.rotation = Quaternion.Euler(0, 0, angle - 70);
+                tempBullet.GetComponent<Rigidbody2D>().velocity = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad + 20), Mathf.Sin(angle * Mathf.Deg2Rad + 20)) * speed;
+            }
             Invoke("Shoot", 1.1f);
             Invoke("TeleShoot", 0.7f);
         }
@@ -255,7 +282,6 @@ public class bossScript : MonoBehaviour
     {
         emitters++;
         Instantiate(emitterObj, transform.position, Quaternion.identity);
-        Invoke("MakeNewEmitter", 10f);
     }
     bool CanSeePlayer()
     {
@@ -298,7 +324,7 @@ public class bossScript : MonoBehaviour
             if (hit.collider == null)
             {
                 Debug.DrawRay(player.transform.position, reverseAtan(angle + a) * mouse_pos.magnitude, Color.yellow);
-                possibleLocations.Add((Vector2)player.transform.position + reverseAtan(angle + a) * Mathf.Clamp(mouse_pos.magnitude + Random.Range(-20, 20), 10, 100));
+                possibleLocations.Add((Vector2)player.transform.position + reverseAtan(angle + a) * Mathf.Clamp(mouse_pos.magnitude + Random.Range(-20, 20), 70, 140));
             }
         }
         return possibleLocations;
@@ -378,19 +404,24 @@ public class bossScript : MonoBehaviour
         canStillCheckPlayerVis = true;
         if (!CanSeePlayer())
         {
-            List<Vector2> possibleLocations = CalculateLOSPosition();
-            if (possibleLocations.Count > 0)
+            MoveToNewPosition();
+        }
+    }
+    void MoveToNewPosition()
+    {
+        List<Vector2> possibleLocations = CalculateLOSPosition();
+        if (possibleLocations.Count > 0)
+        {
+            int safety = 0;
+            while (true)
             {
-                int safety = 0;
-                while (true)
+                safety++;
+                if (safety > 200)
+                    break;
+                targetPosition = possibleLocations[(int)Mathf.Round(Random.Range(0, possibleLocations.Count - 1))];
+                if (!Physics2D.OverlapCircle(targetPosition, avoidRadius, avoidLm))
                 {
-                    safety++;
-                    if (safety > 200)
-                        break;
-                    targetPosition = possibleLocations[(int)Mathf.Round(Random.Range(0, possibleLocations.Count - 1))];
-                    if (!Physics2D.OverlapCircle(targetPosition, avoidRadius, avoidLm)){
-                        break;
-                    }
+                    break;
                 }
             }
         }
@@ -406,6 +437,14 @@ public class bossScript : MonoBehaviour
         health -= amount;
         shake.e.Shake(1f, 0.3f);
         soundTools.i.SpawnNewSoundInstance(hurtSound, new SoundSettings());
-
+        if (health < phaseThresholds[2] && emitters > 0 && emitters < 4)
+        {
+            emitterHits++;
+            if (emitterHits >= emitterSpawnFrequency)
+            {
+                MakeNewEmitter();
+                emitterHits = 0;
+            }
+        }
     }
 }

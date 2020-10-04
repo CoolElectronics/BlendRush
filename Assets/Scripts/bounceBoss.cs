@@ -35,12 +35,13 @@ public class bounceBoss : MonoBehaviour
     {
 
         cameraMain = Camera.main;
+        GetComponent<Rigidbody2D>().velocity = direction * speed;
         // rendererObj = transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
         switch (state)
         {
             case States.bouncing:
                 direction = new Vector3(Random.Range(-1f, 1f), 1f, 0f).normalized;
-                GetComponent<Rigidbody2D>().velocity = direction * speed;
+                
                 break;
             case States.bounceShoot:
                 break;
@@ -58,6 +59,12 @@ public class bounceBoss : MonoBehaviour
             {
                 case States.bouncing:
                     state = States.bounceShoot;
+                    speed *= 2;
+                    GameObject[] minibosses = GameObject.FindGameObjectsWithTag("miniBoss");
+                    foreach (GameObject miniboss in minibosses)
+                    {
+                        miniboss.GetComponent<bouncyBall>().Damage(100);
+                    }
                     break;
                 case States.bounceShoot:
                     state = States.exploding;
@@ -70,10 +77,10 @@ public class bounceBoss : MonoBehaviour
         imagepos.z = 0;
         image.gameObject.transform.parent.position = imagepos;
         image.fillAmount = health / 100;
+        GetComponent<Rigidbody2D>().velocity = direction * speed;
         switch (state)
         {
             case States.bouncing:
-                GetComponent<Rigidbody2D>().velocity = direction * speed;
                 break;
             case States.bounceShoot:
                 break;
@@ -89,15 +96,17 @@ public class bounceBoss : MonoBehaviour
             framesRemaining = 0;
             if (bulletsRemaining > 0)
             {
-                Destroy(ShootBullet(),7f);
+                Destroy(ShootBullet(),6f);
                 bulletsRemaining--;
             }
         }
     }
     void Shoot()
     {
-        bulletsRemaining = numBullets;
-        Invoke("Shoot", 10f);
+        if (state == States.bouncing){
+            bulletsRemaining = numBullets;
+            Invoke("Shoot", 10f);
+        }
     }
     GameObject ShootBullet()
     {
@@ -115,7 +124,7 @@ public class bounceBoss : MonoBehaviour
     {
         if (col.gameObject.tag == "Beam")
         {
-            Damage(2.5f);
+            Damage(8f);
         }
     }
     void OnCollisionEnter2D(Collision2D col)
@@ -143,7 +152,7 @@ public class bounceBoss : MonoBehaviour
         health -= amount;
         shake.e.Shake(1f, 0.3f);
         // soundTools.i.SpawnNewSoundInstance(hurtSound, new SoundSettings());
-        if (Random.value > 0.5f)
+        if (Random.value > 0.5f && state == States.bouncing)
         {
             Instantiate(miniBoss, new Vector3(0, 0, 0), Quaternion.identity);
         }

@@ -15,6 +15,8 @@ TagManager:
   - Boss
   - LaserEmitter
   - Boundary
+  - miniBoss
+  - BossManager
   layers:
   - Default
   - TransparentFX
@@ -30,7 +32,7 @@ TagManager:
   - explosion
   - invPlayer
   - bossCantTouch
-  - 
+  - Trigger
   - 
   - 
   - 

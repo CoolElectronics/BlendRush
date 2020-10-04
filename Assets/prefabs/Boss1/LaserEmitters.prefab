@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3390821628312389604}
   - component: {fileID: 1777811914530617308}
   - component: {fileID: 48112554643305291}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: LaserEmitters
   m_TagString: LaserEmitter
   m_Icon: {fileID: 0}
@@ -48,6 +48,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -96,13 +97,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   magnitude: 30
-  speed: 1.5
-  magnx: 0
-  speedx: 0
+  speed: 1.3
+  magnx: 1
+  speedx: 0.2
   beamPivot: {fileID: 1534797091915916402}
   targetPrefab: {fileID: 8682035731196390259, guid: ff9d2b39ae9984715a18058db7d85df6,
     type: 3}
-  timerMax: 60
+  normal: {fileID: 21300000, guid: f79db6741ba8544c8969746963a87131, type: 3}
+  disabled: {fileID: 21300000, guid: 9fcd06469ea67544b9146fb090a923bb, type: 3}
+  timerMax: 120
 --- !u!1 &6084050214627479953
 GameObject:
   m_ObjectHideFlags: 0
@@ -129,7 +132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6084050214627479953}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.056, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 0.87, y: 4.11119, z: 1}
   m_Children: []
   m_Father: {fileID: 1534797091915916402}
@@ -150,6 +153,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -174,11 +178,11 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f79db6741ba8544c8969746963a87131, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9fcd06469ea67544b9146fb090a923bb, type: 3}
   m_Color: {r: 0.6199374, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
+  m_DrawMode: 2
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
@@ -205,7 +209,7 @@ BoxCollider2D:
     oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
-    drawMode: 0
+    drawMode: 2
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
@@ -256,6 +260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   beamObject: {fileID: 6301726652853773686}
+  beamObject2: {fileID: 0}
   lm:
     serializedVersion: 2
     m_Bits: 23

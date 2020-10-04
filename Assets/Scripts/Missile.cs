@@ -38,7 +38,7 @@ public class Missile : MonoBehaviour
     {
         timer -= Time.deltaTime * 30;
         if (Mathf.Round(timer) % 20 == 4){
-            soundTools.i.SpawnNewSoundInstance(tick, new SoundSettings(0.5f));
+            soundTools.i.SpawnNewSoundInstance(tick, new SoundSettings(0.3f));
         }
         if (timer <= 0)
         {
@@ -84,7 +84,7 @@ public class Missile : MonoBehaviour
     void boom()
     {
         shake.e.Shake(0.3f, 1.3f);
-        soundTools.i.SpawnNewSoundInstance(explode, new SoundSettings());
+        soundTools.i.SpawnNewSoundInstance(explode, new SoundSettings(0.8f));
         Destroy(gameObject);
         Vector2 normalVec = (transform.position - target.position).normalized;
         float angleBetweenPlayer = -Mathf.Atan2(normalVec.x, normalVec.y) * Mathf.Rad2Deg - 90 + explosiongap / 2;

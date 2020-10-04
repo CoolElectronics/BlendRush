@@ -12,24 +12,17 @@ public class LaserTarget : MonoBehaviour
         Vector2 RandomPos = Vector3.zero;
         if (Random.value >= 0.5f)
         {
-            if (Random.value >= 0.5f)
-            {
-                RandomPos = new Vector2(Random.Range(-edgeVector.x, edgeVector.x), edgeVector.y);
-            }
-            else
-            {
-                RandomPos = new Vector2(Random.Range(-edgeVector.x, edgeVector.x), -edgeVector.y);
-            }
+            RandomPos = new Vector2(Random.Range(-edgeVector.x, edgeVector.x), -edgeVector.y);
         }
         else
         {
             if (Random.value >= 0.5f)
             {
-                RandomPos = new Vector2(edgeVector.x, Random.Range(-edgeVector.y, edgeVector.y));
+                RandomPos = new Vector2(edgeVector.x, Random.Range(-edgeVector.y, edgeVector.y / 2));
             }
             else
             {
-                RandomPos = new Vector2(-edgeVector.x, Random.Range(-edgeVector.y, edgeVector.y));
+                RandomPos = new Vector2(-edgeVector.x, Random.Range(-edgeVector.y, edgeVector.y / 2));
             }
         }
         transform.position = (Vector3)RandomPos;

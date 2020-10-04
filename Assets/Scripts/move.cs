@@ -36,6 +36,12 @@ public class move : MonoBehaviour
     float fCutJumpHeight = 0.5f;
     [SerializeField]
     float speed;
+    [SerializeField]
+    float climbspeed;
+    [SerializeField]
+    float reglueThreshold = 1;
+    float reglueTimer;
+    bool wallGlue = false;
     public int dir;
     public bool isWallStick = false;
     public LayerMask lmWallStick;
@@ -58,6 +64,10 @@ public class move : MonoBehaviour
         bool isGrounded = Physics2D.OverlapBox(v2GroundedBoxCheckPosition, v2GroundedBoxCheckScale, 0, lmWalls);
         isWallStick = Physics2D.OverlapBox(transform.position, new Vector2(wallJumpColliderLen, 1.5f), 0, lmWallStick);
         timeSinceGrounded -= Time.deltaTime;
+        reglueTimer -= Time.deltaTime;
+        if (reglueTimer < 0){
+            wallGlue = false;
+        }
         if (isWallStick)
         {
             isGrounded = true;
@@ -123,6 +133,8 @@ public class move : MonoBehaviour
                 }
             }
             isWallStick = false;
+            wallGlue = true;
+            reglueTimer = reglueThreshold;
         }
         if (!Input.GetMouseButton(0) || isGrounded)
         {
@@ -130,15 +142,20 @@ public class move : MonoBehaviour
             fHorizontalVelocity += Input.GetAxisRaw("Horizontal") * Time.deltaTime * 40;
             if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) < 0.01f)
                 fHorizontalVelocity *= Mathf.Pow(1f - fHorizontalDampingWhenStopping, Time.deltaTime * 10f);
-            else if (Mathf.Sign(Input.GetAxisRaw("Horizontal")) != Mathf.Sign(fHorizontalVelocity))
+            else if (Mathf.Sign(Input.GetAxisRaw("Horizontal")) != Mathf.Sign(fHorizontalVelocity)){
+                wallGlue = false;
                 fHorizontalVelocity *= Mathf.Pow(1f - fHorizontalDampingWhenTurning, Time.deltaTime * 10f);
-            else
+            }else
                 fHorizontalVelocity *= Mathf.Pow(1f - damping, Time.deltaTime * 10f);
             rb.velocity = new Vector2(fHorizontalVelocity * speed, rb.velocity.y);
         }
         if (isWallStick)
         {
-            //rb.velocity = new Vector2(rb.velocity.x, 0);
+            if (Input.GetKey(KeyCode.S)){
+                rb.velocity = new Vector2(rb.velocity.x,-climbspeed);
+            }else if (!wallGlue){
+                rb.velocity = new Vector2(rb.velocity.x, 0);
+            }
         }
         if (isWallStick != lastWallStuckStatus)
         {
